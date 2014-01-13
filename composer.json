@@ -1,6 +1,7 @@
 {
 	"name": "anlutro/l4-repository",
 	"description": "Repository classes for Laravel 4.",
+	"license": "MIT",
 	"authors": [
 		{
 			"name": "Andreas Lutro",
