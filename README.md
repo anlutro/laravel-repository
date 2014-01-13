@@ -3,7 +3,7 @@ Installation: `composer require anlutro/l4-repository`
 
 Pick the latest stable version from packagist or the GitHub tag list.
 
-This package utilizes and depends on my (validation service library)[https://github.com/anlutro/laravel-validation].
+This package utilizes and depends on my [validation service library](https://github.com/anlutro/laravel-validation).
 
 WARNING: Backwards compatibility is not guaranteed during version 0.x.
 
