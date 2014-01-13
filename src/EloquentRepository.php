@@ -211,9 +211,9 @@ abstract class EloquentRepository
 	 * @param  array  $attributes
 	 * @param  string $action     The name of the action to be executed on the validator.
 	 *
-	 * @return Model|false
+	 * @return Illuminate\Database\Eloquent\Model|false
 	 */
-	public function dryUpdate(Model $model, array $attributes, $action = 'update')
+	public function dryUpdate($model, array $attributes, $action = 'update')
 	{
 		if (!$model->exists) {
 			throw new \RuntimeException('Cannot update non-existing model');
@@ -246,7 +246,7 @@ abstract class EloquentRepository
 	 *
 	 * @return boolean
 	 */
-	public function update(Model $model, array $attributes)
+	public function update($model, array $attributes)
 	{
 		return $this->dryUpdate($model, $attributes) ? $model->save() : false;
 	}
@@ -258,9 +258,9 @@ abstract class EloquentRepository
 	 *
 	 * @return boolean
 	 */
-	public function delete(Model $model)
+	public function delete($model)
 	{
-		return $model->delete();
+		return (bool) $model->delete();
 	}
 
 	/**
@@ -290,7 +290,7 @@ abstract class EloquentRepository
 	 *
 	 * @param  Illuminate\Database\Eloquent\Builder  $query
 	 *
-	 * @return mixed
+	 * @return Illuminate\Database\Eloquent\Model
 	 */
 	protected function fetchSingle($query)
 	{
