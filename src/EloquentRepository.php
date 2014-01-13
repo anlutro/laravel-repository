@@ -209,10 +209,11 @@ abstract class EloquentRepository
 	 *
 	 * @param  Model  $model
 	 * @param  array  $attributes
+	 * @param  string $action     The name of the action to be executed on the validator.
 	 *
 	 * @return Model|false
 	 */
-	public function dryUpdate(Model $model, array $attributes)
+	public function dryUpdate(Model $model, array $attributes, $action = 'update')
 	{
 		if (!$model->exists) {
 			throw new \RuntimeException('Cannot update non-existing model');
@@ -223,7 +224,7 @@ abstract class EloquentRepository
 		}
 
 		$this->validator->setKey($model->getKey());
-		if (!$this->valid('update', $attributes)) {
+		if (!$this->valid($action, $attributes)) {
 			return false;
 		}
 
