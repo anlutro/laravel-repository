@@ -1,0 +1,24 @@
+{
+	"name": "anlutro/l4-repository",
+	"description": "Repository classes for Laravel 4.",
+	"authors": [
+		{
+			"name": "Andreas Lutro",
+			"email": "anlutro@gmail.com"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0",
+		"illuminate/database": "4.1.*",
+		"anlutro/l4-validation": "0.*"
+	},
+	"require-dev": {
+		"mockery/mockery": "dev-master"
+	},
+	"autoload": {
+		"psr-4": {
+			"c\\": "src/"
+		}
+	},
+	"minimum-stability": "stable"
+}
