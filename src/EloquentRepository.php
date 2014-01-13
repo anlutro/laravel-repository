@@ -18,17 +18,17 @@ use Illuminate\Support\MessageBag;
 abstract class EloquentRepository
 {
 	/**
-	 * @var \Illuminate\Database\Eloquent\Model
+	 * @var Illuminate\Database\Eloquent\Model
 	 */
 	protected $model;
 
 	/**
-	 * @var \c\Validator
+	 * @var c\Validator
 	 */
 	protected $validator;
 
 	/**
-	 * @var \Illuminate\Support\MessageBag
+	 * @var Illuminate\Support\MessageBag
 	 */
 	protected $errors;
 
@@ -47,8 +47,8 @@ abstract class EloquentRepository
 	protected $throwExceptions = false;
 
 	/**
-	 * @param \Illuminate\Database\Eloquent\Model $model
-	 * @param \c\Validator $validator
+	 * @param Illuminate\Database\Eloquent\Model $model
+	 * @param c\Validator $validator
 	 */
 	public function __construct(Model $model, Validator $validator = null)
 	{
@@ -170,19 +170,19 @@ abstract class EloquentRepository
 	 *
 	 * @param  array $attributes
 	 *
-	 * @return Illuminate\Database\Eloquent\Model
+	 * @return Illuminate\Database\Eloquent\Model|false
 	 */
 	public function create(array $attributes = array())
 	{
-		$model = $this->makeNew($attributes);
+		if (!$model = $this->makeNew($attributes)) return false;
 
-		return $model ? $model->save() : false;
+		return $model->save() ? $model : false;
 	}
 
 	/**
 	 * Get all the rows from the database.
 	 *
-	 * @return mixed
+	 * @return Illuminate\Database\Eloquent\Collection
 	 */
 	public function getAll()
 	{
@@ -207,7 +207,7 @@ abstract class EloquentRepository
 	/**
 	 * Update a model without saving it.
 	 *
-	 * @param  Model  $model
+	 * @param  Illuminate\Database\Eloquent\Model  $model
 	 * @param  array  $attributes
 	 * @param  string $action     The name of the action to be executed on the validator.
 	 *
@@ -254,7 +254,7 @@ abstract class EloquentRepository
 	/**
 	 * Delete an existing model instance.
 	 *
-	 * @param  Model  $model
+	 * @param  Illuminate\Database\Eloquent\Model  $model
 	 *
 	 * @return boolean
 	 */
@@ -266,7 +266,7 @@ abstract class EloquentRepository
 	/**
 	 * Run a query builder and return a collection of rows.
 	 *
-	 * @param  $query  query builder instance/reference
+	 * @param  Illuminate\Database\Eloquent\Builder  $query
 	 *
 	 * @return mixed
 	 */
@@ -288,7 +288,7 @@ abstract class EloquentRepository
 	/**
 	 * Run a query builder and return a single row.
 	 *
-	 * @param  $query  query builder
+	 * @param  Illuminate\Database\Eloquent\Builder  $query
 	 *
 	 * @return mixed
 	 */
@@ -340,7 +340,7 @@ abstract class EloquentRepository
 	 * Determine if a model is ready to be saved to the database, regardless of
 	 * create or update.
 	 *
-	 * @param  Model $model
+	 * @param  Illuminate\Database\Eloquent\Model $model
 	 *
 	 * @return boolean
 	 */
@@ -352,7 +352,7 @@ abstract class EloquentRepository
 	/**
 	 * Determine if a model is ready to be created in the database.
 	 *
-	 * @param  Model $model
+	 * @param  Illuminate\Database\Eloquent\Model $model
 	 *
 	 * @return boolean
 	 */
@@ -364,7 +364,7 @@ abstract class EloquentRepository
 	/**
 	 * Determine if a model can be updated.
 	 *
-	 * @param  Model  $model
+	 * @param  Illuminate\Database\Eloquent\Model  $model
 	 * @param  array  $attributes
 	 *
 	 * @return boolean
@@ -377,7 +377,7 @@ abstract class EloquentRepository
 	/**
 	 * Determine if a model is ready to be saved to the database after an update.
 	 *
-	 * @param  Model  $model
+	 * @param  Illuminate\Database\Eloquent\Model  $model
 	 *
 	 * @return boolean
 	 */
@@ -389,7 +389,7 @@ abstract class EloquentRepository
 	/**
 	 * This method is called before a model is saved in the create() method.
 	 *
-	 * @param  \Illuminate\Database\Eloquent\Model $model
+	 * @param  Illuminate\Database\Eloquent\Model $model
 	 *
 	 * @return void
 	 */
@@ -398,7 +398,7 @@ abstract class EloquentRepository
 	/**
 	 * This method is called before a model is saved in the update() method.
 	 *
-	 * @param  \Illuminate\Database\Eloquent\Model $model
+	 * @param  Illuminate\Database\Eloquent\Model $model
 	 *
 	 * @return void
 	 */
@@ -408,7 +408,7 @@ abstract class EloquentRepository
 	 * This method is called before fetchMany and fetchSingle. Use it to add
 	 * functionality that should be present on every query.
 	 *
-	 * @param  \Illuminate\Database\Eloquent\Builder $query
+	 * @param  Illuminate\Database\Eloquent\Builder $query
 	 * @param  boolean $many  Whether the query is fetching one or many rows
 	 *
 	 * @return void
@@ -420,7 +420,7 @@ abstract class EloquentRepository
 	 * to perform operations on a collection of models before it is returned
 	 * from the repository.
 	 *
-	 * @param  \Illuminate\Database\Eloquent\Collection $collection
+	 * @param  Illuminate\Database\Eloquent\Collection $collection
 	 *
 	 * @return void
 	 */
@@ -431,7 +431,7 @@ abstract class EloquentRepository
 	 * to perform operations on a paginator object before it is returned from
 	 * the repository.
 	 *
-	 * @param  \Illuminate\Pagination\Paginator $paginator
+	 * @param  Illuminate\Pagination\Paginator $paginator
 	 *
 	 * @return void
 	 */
@@ -441,7 +441,7 @@ abstract class EloquentRepository
 	 * This method is called after fetchSingle. Use it to prepare a model before
 	 * it is returned by the repository.
 	 *
-	 * @param  \Illuminate\Database\Eloquent\Model $model
+	 * @param  Illuminate\Database\Eloquent\Model $model
 	 *
 	 * @return void
 	 */
