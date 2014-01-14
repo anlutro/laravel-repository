@@ -208,18 +208,16 @@ abstract class EloquentRepository
 	/**
 	 * Update a model without saving it.
 	 *
-	 * @param  mixed  $model
+	 * @param  Illuminate\Database\Eloquent\Model  $model
 	 * @param  array  $attributes
-	 * @param  string $action     The name of the action to be executed on the validator.
+	 * @param  string $action     The name of the action to be executed on the validator. Defaults to 'update'
 	 *
 	 * @return Illuminate\Database\Eloquent\Model|false
 	 *
 	 * @throws RuntimeException if trying to update non-existing model
 	 */
-	public function dryUpdate(&$model, array $attributes, $action = 'update')
+	public function dryUpdate($model, array $attributes, $action = 'update')
 	{
-		$model = $this->verifyModel($model);
-
 		if (!$model->exists) {
 			throw new \RuntimeException('Cannot update non-existing model');
 		}
@@ -244,15 +242,17 @@ abstract class EloquentRepository
 	}
 
 	/**
-	 * Save changes an existing model instance.
+	 * Update and save changes an existing model instance.
 	 *
-	 * @param  mixed $model
+	 * @param  mixed $model      A model instance or primary key.
 	 * @param  array $attributes
 	 *
 	 * @return boolean
 	 */
 	public function update($model, array $attributes)
 	{
+		$model = $this->verifyModel($model);
+
 		return $this->dryUpdate($model, $attributes) ? $model->save() : false;
 	}
 
