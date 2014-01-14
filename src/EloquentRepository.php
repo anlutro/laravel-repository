@@ -10,6 +10,7 @@
 namespace c;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\MessageBag;
 
 /**
@@ -207,14 +208,18 @@ abstract class EloquentRepository
 	/**
 	 * Update a model without saving it.
 	 *
-	 * @param  Illuminate\Database\Eloquent\Model  $model
+	 * @param  mixed  $model
 	 * @param  array  $attributes
 	 * @param  string $action     The name of the action to be executed on the validator.
 	 *
 	 * @return Illuminate\Database\Eloquent\Model|false
+	 *
+	 * @throws RuntimeException if trying to update non-existing model
 	 */
 	public function dryUpdate($model, array $attributes, $action = 'update')
 	{
+		$model = $this->verifyModel($model);
+
 		if (!$model->exists) {
 			throw new \RuntimeException('Cannot update non-existing model');
 		}
@@ -241,7 +246,7 @@ abstract class EloquentRepository
 	/**
 	 * Save changes an existing model instance.
 	 *
-	 * @param  Illuminate\Database\Eloquent\Model $model
+	 * @param  mixed $model
 	 * @param  array $attributes
 	 *
 	 * @return boolean
@@ -254,13 +259,34 @@ abstract class EloquentRepository
 	/**
 	 * Delete an existing model instance.
 	 *
-	 * @param  Illuminate\Database\Eloquent\Model  $model
+	 * @param  mixed  $model
 	 *
 	 * @return boolean
 	 */
 	public function delete($model)
 	{
+		$model = $this->verifyModel($model);
+
 		return (bool) $model->delete();
+	}
+
+	/**
+	 * Ensure that a model given is an actual instance of a model. If it isn't,
+	 * try to fetch it by primary key or throw an exception.
+	 *
+	 * @param  mixed  $model
+	 *
+	 * @return Illuminate\Database\Eloquent\Model
+	 *
+	 * @throws Illuminate\Database\Eloquent\ModelNotFoundException
+	 */
+	protected function verifyModel($model)
+	{
+		if (!$model instanceof Model && !$model = $this->getByKey($model)) {
+			throw new ModelNotFoundException("Could not find model with key [$model]");
+		}
+
+		return $model;
 	}
 
 	/**
