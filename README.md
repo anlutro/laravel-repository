@@ -3,10 +3,12 @@ Installation: `composer require anlutro/l4-repository`
 
 Pick the latest stable version from packagist or the GitHub tag list.
 
+This package utilizes and depends on my [validation service library](https://github.com/anlutro/laravel-validation).
+
 WARNING: Backwards compatibility is not guaranteed during version 0.x.
 
 ### Eloquent repository
-Location: src/c/EloquentRepository.php
+Location: src/EloquentRepository.php
 
 A repository is a class that lies between the controller and the model to make the controller more lightweight and allows you to more easily re-use database logic in your application.
 
