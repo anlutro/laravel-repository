@@ -216,7 +216,7 @@ abstract class EloquentRepository
 	 *
 	 * @throws RuntimeException if trying to update non-existing model
 	 */
-	public function dryUpdate($model, array $attributes, $action = 'update')
+	public function dryUpdate(&$model, array $attributes, $action = 'update')
 	{
 		$model = $this->verifyModel($model);
 
