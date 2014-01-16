@@ -79,11 +79,19 @@ abstract class EloquentRepository
 	}
 
 	/**
-	 * Get the validation errors.
+	 * @see getErrors()
+	 */
+	public function errors()
+	{
+		return $this->errors;
+	}
+
+	/**
+	 * Get the repository's error messagess.
 	 * 
 	 * @return Illuminate\Support\MessageBag
 	 */
-	public function errors()
+	public function getErrors()
 	{
 		return $this->errors;
 	}
