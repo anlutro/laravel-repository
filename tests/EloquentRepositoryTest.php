@@ -187,12 +187,16 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 
 	public function makeMockModel($class = 'Illuminate\Database\Eloquent\Model')
 	{
-		return m::mock($class);
+		$mock = m::mock($class);
+		$mock->shouldReceive('getTable')->andReturn('table');
+		return $mock;
 	}
 
 	public function makeMockValidator($class = 'c\Validator')
 	{
-		return m::mock($class);
+		$mock = m::mock($class);
+		$mock->shouldReceive('setTable')->andReturn('table');
+		return $mock;
 	}
 
 	public function makeMockQuery()

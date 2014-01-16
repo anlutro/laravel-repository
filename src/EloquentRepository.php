@@ -54,7 +54,12 @@ abstract class EloquentRepository
 	public function __construct(Model $model, Validator $validator = null)
 	{
 		$this->model = $model;
-		$this->validator = $validator;
+
+		if ($validator) {
+			$this->validator = $validator;
+			$this->validator->setTable($this->model->getTable());
+		}
+
 		$this->errors = new MessageBag;
 	}
 
