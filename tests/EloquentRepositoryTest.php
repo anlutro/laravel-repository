@@ -123,7 +123,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$updateModel = new RepoTestModelStub;
 		$updateModel->id = 'foo';
 		$updateModel->exists = true;
-		$validator->shouldReceive('setKey')->with('foo');
+		$validator->shouldReceive('replace')->with('key', 'foo');
 		$validator->shouldReceive('validUpdate')->andReturn(false);
 		$validator->shouldReceive('errors->all')->andReturn([]);
 
@@ -138,7 +138,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$updateModel->exists = true;
 		$updateModel->shouldReceive('fill')->once()->with(['foo' => 'bar']);
 		$updateModel->shouldReceive('save')->once()->andReturn(true);
-		$validator->shouldReceive('setKey')->with('foo');
+		$validator->shouldReceive('replace')->with('key', 'foo');
 		$validator->shouldReceive('validUpdate')->andReturn(true);
 
 		$this->assertTrue($repo->update($updateModel, ['foo' => 'bar']));
@@ -156,7 +156,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$model->shouldReceive('newQuery')->andReturn($query);
 		$model->shouldReceive('getQualifiedKeyName');
 		$query->shouldReceive('where->first')->andReturn($updateModel);
-		$validator->shouldReceive('setKey')->with(1);
+		$validator->shouldReceive('replace')->with('key', 1);
 		$validator->shouldReceive('validUpdate')->andReturn(true);
 
 		$this->assertTrue($repo->update(1, ['foo' => 'bar']));
@@ -195,7 +195,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 	public function makeMockValidator($class = 'c\Validator')
 	{
 		$mock = m::mock($class);
-		$mock->shouldReceive('setTable')->andReturn('table');
+		$mock->shouldReceive('replace')->with('table', 'table');
 		return $mock;
 	}
 

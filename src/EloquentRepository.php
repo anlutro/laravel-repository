@@ -57,7 +57,7 @@ abstract class EloquentRepository
 
 		if ($validator) {
 			$this->validator = $validator;
-			$this->validator->setTable($this->model->getTable());
+			$this->validator->replace('table', $this->model->getTable());
 		}
 
 		$this->errors = new MessageBag;
@@ -239,7 +239,7 @@ abstract class EloquentRepository
 			return false;
 		}
 
-		$this->validator->setKey($model->getKey());
+		$this->validator->replace('key', $model->getKey());
 		if (!$this->valid($action, $attributes)) {
 			return false;
 		}
