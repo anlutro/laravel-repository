@@ -368,7 +368,7 @@ abstract class EloquentRepository
 		$passes = $this->validator->$method($attributes);
 
 		if (!$passes) {
-			$errors = $this->validator->errors()->all();
+			$errors = $this->validator->errors()->getMessage();
 			$this->errors->merge($errors);
 		};
 
