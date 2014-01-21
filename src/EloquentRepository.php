@@ -160,12 +160,13 @@ abstract class EloquentRepository
 	 * Create and validate a new model instance without saving it.
 	 *
 	 * @param  array  $attributes
+	 * @param  string $action     The name of the action to be executed on the validator. Defaults to 'create'
 	 *
 	 * @return Illuminate\Database\Eloquent\Model
 	 */
-	public function makeNew(array $attributes = array())
+	public function makeNew(array $attributes = array(), $action = 'create')
 	{
-		if (!$this->valid('create', $attributes)) {
+		if (!$this->valid($action, $attributes)) {
 			return false;
 		}
 
