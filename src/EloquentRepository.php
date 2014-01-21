@@ -370,7 +370,7 @@ abstract class EloquentRepository
 		if (!$passes) {
 			$errors = $this->validator->errors()->getMessages();
 			$this->errors->merge($errors);
-		};
+		}
 
 		return $passes;
 	}
