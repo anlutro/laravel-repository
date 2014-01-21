@@ -91,7 +91,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 	{
 		list($model, $validator, $repo) = $this->make('RepoWithPrepares');
 		$validator->shouldReceive('validCreate')->andReturn(false);
-		$validator->shouldReceive('errors->all')->andReturn([]);
+		$validator->shouldReceive('errors->getMessages')->andReturn([]);
 
 		$this->assertFalse($repo->create(array()));
 	}
@@ -125,7 +125,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$updateModel->exists = true;
 		$validator->shouldReceive('replace')->with('key', 'foo');
 		$validator->shouldReceive('validUpdate')->andReturn(false);
-		$validator->shouldReceive('errors->all')->andReturn([]);
+		$validator->shouldReceive('errors->getMessages')->andReturn([]);
 
 		$this->assertFalse($repo->update($updateModel, array()));
 	}
