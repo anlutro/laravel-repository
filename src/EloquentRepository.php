@@ -60,7 +60,7 @@ abstract class EloquentRepository
 			$this->validator->replace('table', $this->model->getTable());
 		}
 
-		$this->errors = new MessageBag;
+		$this->resetErrors();
 	}
 
 	/**
@@ -99,6 +99,16 @@ abstract class EloquentRepository
 	public function getErrors()
 	{
 		return $this->errors;
+	}
+
+	/**
+	 * Reset the repository's error messages.
+	 *
+	 * @return void
+	 */
+	public function resetErrors()
+	{
+		$this->errors = new MessageBag;
 	}
 
 	/**
@@ -166,6 +176,8 @@ abstract class EloquentRepository
 	 */
 	public function makeNew(array $attributes = array(), $action = 'create')
 	{
+		$this->resetErrors();
+
 		if (!$this->valid($action, $attributes)) {
 			return false;
 		}
@@ -235,6 +247,8 @@ abstract class EloquentRepository
 		if (!$model->exists) {
 			throw new \RuntimeException('Cannot update non-existing model');
 		}
+
+		$this->resetErrors();
 
 		if (!$this->canBeUpdated($model, $attributes)) {
 			return false;
