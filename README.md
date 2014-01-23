@@ -14,7 +14,7 @@ A repository is a class that lies between the controller and the model to make t
 
 Extend the class and override the constructor. Type hint towards your own model and validator class to inject them automatically and call `parent::__construct($model, $validator);`.
 
-The repository comes with some standard methods already, like getByKey and getAll. You may add as many custom methods you want to the repository. Overwrite the constructor method to inject your own model and validator. The methods available by default are:
+The repository comes with some standard methods already, like getByKey and getAll. You may add as many custom methods you want to the repository. Overwrite the constructor method to inject your own model and validator. The public methods available by default are:
 
 - getAll()
 - getByKey($key)
@@ -29,12 +29,14 @@ You can toggle pagination on and off by using paginate(false) or paginate(20). Y
 
 The repository has various "hooks" to perform additional validation, safety checks or to apply certain restrictions on every query.
 
-- prepareQuery($query, $many) - is ran before every query. $many is a boolean indicating whether one or many rows are being fetched.
+- prepareQuery($query, $many) - is ran before every select query. $many is a boolean indicating whether one or many rows are being fetched.
+- prepareCreate($model, $input) - is ran before every create action after instantiation and mass assignment has been done.
+- prepareUpdate($model, $input) - is ran before every update action after mass assignment has been done.
 - prepareModel($model) - after a single model is retrieved from the database
 - prepareCollection($collection) - after a collection is retrieved
 - preparePaginator($paginator) - after a paginated result is retrieved
 
-The repository also utilizes validation. If methods like update() and create() return false, validation errors are available via the errors() method. In addition, you can do extra validation in the repository where you have access to the actual models. The following hooks are available - all of them should return either true or false.
+The repository also utilizes validation. If methods like update() and create() return false, validation errors are available via the getErrors() method. In addition, you can do extra validation in the repository where you have access to the actual models. The following hooks are available - all of them should return either true or false.
 
 - readyForSave($model) - ran before every create/update to check if a model is in a state to be saved to the database.
 - readyForCreate($model) - as above, but only for creates.
