@@ -34,6 +34,13 @@ abstract class EloquentRepository
 	protected $errors;
 
 	/**
+	 * Whether to call push() or just save() when creating/updating a model.
+	 *
+	 * @var boolean
+	 */
+	protected $push = false;
+
+	/**
 	 * How the repository should paginate.
 	 *
 	 * @var false|int
@@ -203,7 +210,9 @@ abstract class EloquentRepository
 	{
 		if (!$model = $this->makeNew($attributes)) return false;
 
-		return $model->save() ? $model : false;
+		$method = $this->push ? 'push' : 'save';
+
+		return $model->$method() ? $model : false;
 	}
 
 	/**
@@ -281,7 +290,9 @@ abstract class EloquentRepository
 	{
 		$model = $this->verifyModel($model);
 
-		return $this->dryUpdate($model, $attributes) ? $model->save() : false;
+		$method = $this->push ? 'push' : 'save';
+
+		return $this->dryUpdate($model, $attributes) ? $model->$method() : false;
 	}
 
 	/**
