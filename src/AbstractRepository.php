@@ -114,7 +114,7 @@ abstract class AbstractRepository
 	 *
 	 * @return void
 	 */
-	public function resetErrors()
+	protected function resetErrors()
 	{
 		$this->errors = new MessageBag;
 	}
@@ -417,20 +417,13 @@ abstract class AbstractRepository
 	protected function prepareModel($model) {}
 
 	/**
-	 * Get a new query builder instance.
-	 *
-	 * @return mixed
-	 */
-	abstract protected function newQuery();
-
-	/**
 	 * Get a new model instance.
 	 *
 	 * @param  array  $attributes
 	 *
 	 * @return mixed
 	 */
-	abstract protected function getNew(array $attributes = array());
+	abstract public function getNew(array $attributes = array());
 
 	/**
 	 * Create a new model instance and save it to the database.
@@ -439,7 +432,33 @@ abstract class AbstractRepository
 	 *
 	 * @return mixed
 	 */
-	abstract protected function create(array $attributes = array());
+	abstract public function create(array $attributes = array());
+
+	/**
+	 * Update and save changes an existing model instance.
+	 *
+	 * @param  mixed  $model
+	 * @param  array  $attributes
+	 *
+	 * @return boolean
+	 */
+	abstract public function update($model, array $attributes);
+
+	/**
+	 * Delete an existing model instance.
+	 *
+	 * @param  mixed  $model
+	 *
+	 * @return boolean
+	 */
+	abstract public function delete($model);
+
+	/**
+	 * Get a new query builder instance.
+	 *
+	 * @return mixed
+	 */
+	abstract protected function newQuery();
 
 	/**
 	 * Update an existing model instance with new attributes.
@@ -450,25 +469,6 @@ abstract class AbstractRepository
 	 * @return void
 	 */
 	abstract protected function updateModel($model, array $attributes);
-
-	/**
-	 * Update and save changes an existing model instance.
-	 *
-	 * @param  mixed  $model
-	 * @param  array  $attributes
-	 *
-	 * @return boolean
-	 */
-	abstract protected function update($model, array $attributes);
-
-	/**
-	 * Delete an existing model instance.
-	 *
-	 * @param  mixed  $model
-	 *
-	 * @return boolean
-	 */
-	abstract protected function delete($model);
 
 	/**
 	 * Get the primary key from a model.

@@ -36,6 +36,8 @@ abstract class EloquentRepository extends AbstractRepository
 	 */
 	public function __construct(Model $model, Validator $validator = null)
 	{
+		parent::__construct();
+
 		$this->model = $model;
 		$this->setPrimaryKey($model->getQualifiedKeyName());
 
@@ -43,8 +45,6 @@ abstract class EloquentRepository extends AbstractRepository
 			$this->validator = $validator;
 			$this->validator->replace('table', $this->model->getTable());
 		}
-
-		parent::__construct();
 	}
 
 	/**
@@ -58,11 +58,13 @@ abstract class EloquentRepository extends AbstractRepository
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Set the repository's model.
+	 *
+	 * @param $model  Illuminate\Database\Eloquent\Model
 	 */
-	public function newQuery()
+	public function setModel($model)
 	{
-		return $this->model->newQuery();
+		$this->model = $model;
 	}
 
 	/**
@@ -83,14 +85,6 @@ abstract class EloquentRepository extends AbstractRepository
 		$method = $this->push ? 'push' : 'save';
 
 		return $model->$method() ? $model : false;
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function updateModel($model, array $attributes)
-	{
-		$model->fill($attributes);
 	}
 
 	/**
@@ -128,7 +122,23 @@ abstract class EloquentRepository extends AbstractRepository
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getModelKey($model)
+	protected function newQuery()
+	{
+		return $this->model->newQuery();
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	protected function updateModel($model, array $attributes)
+	{
+		$model->fill($attributes);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	protected function getModelKey($model)
 	{
 		return $model->getKey();
 	}

@@ -99,14 +99,6 @@ abstract class DatabaseRepository extends AbstractRepository
 	/**
 	 * {@inheritdoc}
 	 */
-	public function newQuery()
-	{
-		return $this->db->table($this->table);
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
 	public function getNew(array $attributes = array())
 	{
 		$obj = new \StdClass;
@@ -127,16 +119,6 @@ abstract class DatabaseRepository extends AbstractRepository
 			->insert((array) $model);
 
 		return $result ? $model : false;
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function updateModel($model, array $attributes)
-	{
-		foreach ($attributes as $key => $value) {
-			$model->$key = $value;
-		}
 	}
 
 	/**
@@ -168,7 +150,25 @@ abstract class DatabaseRepository extends AbstractRepository
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getModelKey($model)
+	protected function newQuery()
+	{
+		return $this->db->table($this->table);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	protected function updateModel($model, array $attributes)
+	{
+		foreach ($attributes as $key => $value) {
+			$model->$key = $value;
+		}
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	protected function getModelKey($model)
 	{
 		return $model->{$this->primaryKey};
 	}
