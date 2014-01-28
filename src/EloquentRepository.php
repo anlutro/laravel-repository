@@ -44,7 +44,7 @@ abstract class EloquentRepository extends AbstractRepository
 			$this->validator->replace('table', $this->model->getTable());
 		}
 
-		$this->resetErrors();
+		parent::__construct();
 	}
 
 	/**

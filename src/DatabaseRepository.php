@@ -33,18 +33,19 @@ abstract class DatabaseRepository extends AbstractRepository
 	protected $table;
 
 	/**
-	 * @param \Illuminate\Database\connection $db
+	 * @param Illuminate\Database\Connection $db
 	 * @param string $table
 	 */
 	public function __construct(Connection $db)
 	{
+		parent::__construct();
+
 		if ($this->table === null) {
 			$class = get_class($this);
 			throw new \RuntimeException("Property {$class}::\$table must be defined.");
 		}
 
 		$this->setConnection($db);
-		$this->resetErrors();
 	}
 
 	/**

@@ -37,6 +37,14 @@ abstract class AbstractRepository
 	protected $primaryKey = 'id';
 
 	/**
+	 * Construct a new repository instance.
+	 */
+	public function __construct()
+	{
+		$this->resetErrors();
+	}
+
+	/**
 	 * Get the repository's validator.
 	 *
 	 * @return c\Validator
@@ -411,7 +419,7 @@ abstract class AbstractRepository
 	/**
 	 * Get a new query builder instance.
 	 *
-	 * @return Illuminate\Database\Eloquent\Builder
+	 * @return mixed
 	 */
 	abstract protected function newQuery();
 
@@ -420,16 +428,16 @@ abstract class AbstractRepository
 	 *
 	 * @param  array  $attributes
 	 *
-	 * @return Illuminate\Database\Eloquent\Model
+	 * @return mixed
 	 */
 	abstract protected function getNew(array $attributes = array());
 
 	/**
 	 * Create a new model instance and save it to the database.
 	 *
-	 * @param  array $attributes
+	 * @param  array  $attributes
 	 *
-	 * @return Illuminate\Database\Eloquent\Model|false
+	 * @return mixed
 	 */
 	abstract protected function create(array $attributes = array());
 
@@ -446,8 +454,8 @@ abstract class AbstractRepository
 	/**
 	 * Update and save changes an existing model instance.
 	 *
-	 * @param  mixed $model      A model instance or primary key.
-	 * @param  array $attributes
+	 * @param  mixed  $model
+	 * @param  array  $attributes
 	 *
 	 * @return boolean
 	 */
@@ -465,7 +473,7 @@ abstract class AbstractRepository
 	/**
 	 * Get the primary key from a model.
 	 *
-	 * @param  mixed $model
+	 * @param  mixed  $model
 	 *
 	 * @return mixed
 	 */
