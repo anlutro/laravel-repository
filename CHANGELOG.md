@@ -1,3 +1,9 @@
+### 0.4
+
+Moved logic to an abstract class to allow more work on the DatabaseRepository.
+
+- Boolean flag for calling push() instead of save() in EloquentRepository
+
 ### 0.3
 Update primarily to work with validator 0.3 and up.
 

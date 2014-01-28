@@ -78,7 +78,6 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		list($model, $validator, $repo) = $this->make('RepoWithPrepares');
 		$query = $this->makeMockQuery();
 		$result = m::mock();
-		$model->shouldReceive('getQualifiedKeyName')->once()->andReturn('foo');
 		$model->shouldReceive('newQuery->where')->andReturn($query);
 		$query->shouldReceive('prepareQuery')->once();
 		$query->shouldReceive('first')->once()->andReturn($result);
@@ -144,24 +143,6 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue($repo->update($updateModel, ['foo' => 'bar']));
 	}
 
-	public function testUpdateWithKey()
-	{
-		list($model, $validator, $repo) = $this->make();
-		$updateModel = $this->makeMockModel()->makePartial();
-		$updateModel->id = 1;
-		$updateModel->exists = true;
-		$updateModel->shouldReceive('fill')->once()->with(['foo' => 'bar']);
-		$updateModel->shouldReceive('save')->once()->andReturn(true);
-		$query = $this->makeMockQuery();
-		$model->shouldReceive('newQuery')->andReturn($query);
-		$model->shouldReceive('getQualifiedKeyName');
-		$query->shouldReceive('where->first')->andReturn($updateModel);
-		$validator->shouldReceive('replace')->with('key', 1);
-		$validator->shouldReceive('validUpdate')->andReturn(true);
-
-		$this->assertTrue($repo->update(1, ['foo' => 'bar']));
-	}
-
 	public function testDelete()
 	{
 		list($model, $validator, $repo) = $this->make();
@@ -188,6 +169,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 	public function makeMockModel($class = 'Illuminate\Database\Eloquent\Model')
 	{
 		$mock = m::mock($class);
+		$mock->shouldReceive('getQualifiedKeyName')->andReturn('table.id');
 		$mock->shouldReceive('getTable')->andReturn('table');
 		return $mock;
 	}

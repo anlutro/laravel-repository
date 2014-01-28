@@ -10,17 +10,18 @@
 namespace c;
 
 use Illuminate\Database\Connection;
+use Illuminate\Support\Fluent;
 
 /**
  * Abstract database repository pattern. Use it to build repositories that don't
  * utilize Eloquent for simplicity or performance reasons.
  */
-abstract class DatabaseRepository
+abstract class DatabaseRepository extends AbstractRepository
 {
 	/**
 	 * The database connection to use.
 	 *
-	 * @var \Illuminate\Database\Connection
+	 * @var Illuminate\Database\Connection
 	 */
 	protected $db;
 
@@ -32,23 +33,38 @@ abstract class DatabaseRepository
 	protected $table;
 
 	/**
-	 * Whether or not to paginate, and how many items to show per page.
-	 *
-	 * @var false|int
+	 * @param \Illuminate\Database\connection $db
+	 * @param string $table
 	 */
-	protected $paginate = false;
+	public function __construct(Connection $db)
+	{
+		if ($this->table === null) {
+			$class = get_class($this);
+			throw new \RuntimeException("Property {$class}::\$table must be defined.");
+		}
+
+		$this->setConnection($db);
+		$this->resetErrors();
+	}
 
 	/**
-	 * @param \Illuminate\Database\connection $db
-	 * @param string $table (optional)
+	 * Set the connection to run queries on.
+	 *
+	 * @param Illuminate\Database\Connection $db
 	 */
-	public function __construct(Connection $db, $table = null)
+	public function setConnection(Connection $db)
 	{
-		$this->setConnection($db);
+		$this->db = $db;
+	}
 
-		if ($table !== null) {
-			$this->table = (string) $table;
-		}
+	/**
+	 * Get the connection instance.
+	 *
+	 * @return Illuminate\Database\Connection
+	 */
+	public function getConnection()
+	{
+		return $this->db;
 	}
 
 	/**
@@ -62,210 +78,97 @@ abstract class DatabaseRepository
 	}
 
 	/**
-	 * Set the connection to run queries on.
+	 * Set the table to query from.
 	 *
-	 * @param \Illuminate\Database\Connection $db
+	 * @param string $table
 	 */
-	public function setConnection(Connection $db)
+	public function setTable($table)
 	{
-		$this->db = $db;
+		$this->table = (string) $table;
 	}
 
 	/**
-	 * Get the connection instance.
-	 *
-	 * @return \Illuminate\Database\Connection
+	 * {@inheritdoc}
 	 */
-	public function getConnection()
+	public function getPrimaryKey()
 	{
-		return $this->db;
+		return "{$this->table}.{$this->primaryKey}";
 	}
 
 	/**
-	 * Get all the rows from the table.
-	 *
-	 * @return \Illuminate\Support\Collection
+	 * {@inheritdoc}
 	 */
-	public function getAll()
-	{
-		$query = $this->newQuery();
-
-		return $this->runQuery($query);
-	}
-
-	/**
-	 * Get a single row from the database by key.
-	 *
-	 * @param  mixed  $key
-	 * @param  string $keyName defaults to 'id'
-	 *
-	 * @return StdClass|array
-	 */
-	public function getByKey($key, $keyName = 'id')
-	{
-		$query = $this->newQuery();
-
-		return $query->where($keyName, '=', $key)
-			->first();
-	}
-
-	/**
-	 * Update an existing row in the database.
-	 *
-	 * @param  mixed  $key
-	 * @param  array  $attributes
-	 * @param  string $keyName    defaults to 'id'
-	 *
-	 * @return int  number of rows updated
-	 */
-	public function update($key, array $attributes, $keyName = 'id')
-	{
-		$query = $this->newQuery();
-
-		return $query->where($keyName, '=', $key)
-			->update($attributes);
-	}
-
-	/**
-	 * Update an existing entitiy.
-	 *
-	 * @param  StdClass|array $entity
-	 * @param  string         $keyName  defaults to 'id'
-	 *
-	 * @return int            number of rows updated
-	 */
-	public function updateEntity($entity, $keyName = 'id')
-	{
-		$attributes = (array) $entity;
-
-		return $this->update($entity->$keyName, $attributes, $keyName);
-	}
-
-	/**
-	 * Delete a row from the database by key.
-	 *
-	 * @param  mixed  $key
-	 * @param  string $keyName defaults to 'id'
-	 *
-	 * @return int    number of rows updated
-	 */
-	public function delete($key, $keyName = 'id')
-	{
-		$query = $this->newQuery();
-
-		return $query->where($keyName, '=', $key)
-			->delete();
-	}
-
-	/**
-	 * Delete an entity.
-	 *
-	 * @param  StdClass|array $entity
-	 * @param  string         $keyName
-	 *
-	 * @return int            number of rows updated
-	 */
-	public function deleteEntity($entity, $keyName = 'id')
-	{
-		return $this->delete($entity->$keyName, $keyName);
-	}
-
-	/**
-	 * Insert a row into the database.
-	 *
-	 * @param  array  $attributes
-	 *
-	 * @return mixed
-	 */
-	public function create(array $attributes)
-	{
-		$query = $this->newQuery();
-
-		return $query->insert($attributes);
-	}
-
-	/**
-	 * Insert an entity into the database.
-	 *
-	 * @param  StdClass $entity
-	 *
-	 * @return mixed
-	 */
-	public function createEntity($entity)
-	{
-		return $this->create((array) $entity);
-	}
-
-	/**
-	 * Get a new entity from the table.
-	 *
-	 * @return StdClass
-	 */
-	public function getNew()
-	{
-		static $entity;
-
-		if ($entity === null) {
-			$schema = $this->db->getDoctrineSchemaManager();
-			$columns = array_keys($schema->listTableColumns($table));
-			$entity = (object) array_fill_keys($columns, null);
-		}
-
-		return $entity;
-	}
-
-	/**
-	 * Get a new query builder instance.
-	 *
-	 * @return \Illuminate\Database\Query\Builder
-	 */
-	protected function newQuery()
+	public function newQuery()
 	{
 		return $this->db->table($this->table);
 	}
 
 	/**
-	 * Toggle pagination. False or no arguments to disable pagination, otherwise
-	 * provide a number of items to show per page.
-	 *
-	 * @param  mixed $paginate
-	 *
-	 * @return void
+	 * {@inheritdoc}
 	 */
-	public function togglePagination($paginate = false)
+	public function getNew(array $attributes = array())
 	{
-		if ($paginate === false) {
-			$this->paginate = false;
-		} else {
-			$this->paginate = (int) $paginate;
+		$obj = new \StdClass;
+		foreach ($attributes as $key => $value) {
+			$obj->$key = $value;
+		}
+		return $obj;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function create(array $attributes = array())
+	{
+		if (!$model = $this->makeNew($attributes)) return false;
+		
+		$result = $this->newQuery()
+			->insert((array) $model);
+
+		return $result ? $model : false;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function updateModel($model, array $attributes)
+	{
+		foreach ($attributes as $key => $value) {
+			$model->$key = $value;
 		}
 	}
 
 	/**
-	 * Run a query builder and return its results.
-	 *
-	 * @param  $query  query builder instance/reference
-	 *
-	 * @return mixed
+	 * {@inheritdoc}
 	 */
-	protected function runQuery($query)
+	public function update($model, array $attributes)
 	{
-		$this->prepareQuery($query);
+		if (!$this->dryUpdate($model, $attributes)) return false;
 
-		if ($this->paginate === false) {
-			return $query->get();
-		} else {
-			return $query->paginate($this->paginate);
-		}
+		$result = $this->newQuery()
+			->where($this->getPrimaryKey(), '=', $this->getModelKey($model))
+			->update($model->toArray());
+
+		return (bool) $result;
 	}
 
 	/**
-	 * This function is ran by runQuery before fetching the results. Put default
-	 * behaviours in this function.
-	 *
-	 * @param  $query  query builder instance/reference
-	 *
-	 * @return void
+	 * {@inheritdoc}
 	 */
-	protected function prepareQuery($query) {}
+	public function delete($model)
+	{
+		$result = $this->newQuery()
+			->where($this->getPrimaryKey(), '=', $this->getModelKey($model))
+			->delete();
+
+		return (bool) $result;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getModelKey($model)
+	{
+		return $model->{$this->primaryKey};
+	}
 }

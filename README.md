@@ -7,12 +7,8 @@ This package utilizes and depends on my [validation service library](https://git
 
 WARNING: Backwards compatibility is not guaranteed during version 0.x.
 
-### Eloquent repository
-Location: src/EloquentRepository.php
-
+### Usage
 A repository is a class that lies between the controller and the model to make the controller more lightweight and allows you to more easily re-use database logic in your application.
-
-Extend the class and override the constructor. Type hint towards your own model and validator class to inject them automatically and call `parent::__construct($model, $validator);`.
 
 The repository comes with some standard methods already, like getByKey and getAll. You may add as many custom methods you want to the repository. Overwrite the constructor method to inject your own model and validator. The public methods available by default are:
 
@@ -36,17 +32,23 @@ The repository has various "hooks" to perform additional validation, safety chec
 - prepareCollection($collection) - after a collection is retrieved
 - preparePaginator($paginator) - after a paginated result is retrieved
 
-The repository also utilizes validation. If methods like update() and create() return false, validation errors are available via the getErrors() method. In addition, you can do extra validation in the repository where you have access to the actual models. The following hooks are available - all of them should return either true or false.
+The repository also has methods you can hook into to prevent saves from happening. The following methods should return true or false:
 
 - readyForSave($model) - ran before every create/update to check if a model is in a state to be saved to the database.
 - readyForCreate($model) - as above, but only for creates.
 - readyForUpdate($model) - as above, but only for updates.
 - canBeUpdated($model) - this is called before the model is updated/filled with input data, use it to determine if a model should even be allowed to be updated.
 
-Add errors by doing `$this->errors->add($key, $message)`.
+Add errors to the repository by doing `$this->errors->add($key, $message)`. Make sure to add an error before returning false.
+
+### Eloquent repository
+For eloquent repositories you need to extend the class and override the constructor. Type hint towards your own model and validator class to inject them automatically and call `parent::__construct($model, $validator);` (the validator is optional).
 
 ### Database repository
-This repository is incomplete, but the idea is to just use the raw query builder instead of models.
+For database repositories you need to set `protected $table = 'mytable'` and optionally `protected $primaryKey = 'some_id'`. If you want to inject a validator you can either call `setValidator` or override the constructor, but remember to inject `Illuminate\Database\Connection` and call `parent::__construct($connection)`.
+
+### Validation
+If a validator is set on the repository, validation is done automatically. If methods like update() and create() return false, validation errors are available via the getErrors() method. The "readyFor" and "canBe" methods can be used to do extra validation inside the repository if necessary. You can add an error to the existing ones by calling `$this->errors->add('key', 'Some error message')`.
 
 ## Contact
 Open an issue on GitHub if you have any problems or suggestions.
