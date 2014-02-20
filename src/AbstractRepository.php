@@ -73,7 +73,7 @@ abstract class AbstractRepository
 	 *
 	 * @return bool
 	 */
-	protected function valid($action, array $attributes)
+	public function valid($action, array $attributes)
 	{
 		// if no validator is set, no validation should be done, return true
 		if ($this->validator === null) {
