@@ -10,7 +10,6 @@
 namespace c;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\MessageBag;
 
 /**
@@ -39,7 +38,6 @@ abstract class EloquentRepository extends AbstractRepository
 		parent::__construct();
 
 		$this->model = $model;
-		$this->setPrimaryKey($model->getQualifiedKeyName());
 
 		if ($validator) {
 			$this->validator = $validator;
@@ -75,71 +73,43 @@ abstract class EloquentRepository extends AbstractRepository
 		return $this->model->newInstance($attributes);
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function create(array $attributes = array())
-	{
-		if (!$model = $this->makeNew($attributes)) return false;
-
-		$method = $this->push ? 'push' : 'save';
-
-		return $model->$method() ? $model : false;
-	}
-
-	/**
-	 * {@inheritdoc}
-	 * 
-	 * @throws RuntimeException if trying to update non-existing model
-	 */
-	public function dryUpdate($model, array $attributes, $action = 'update')
-	{
-		if (!$model->exists) {
-			throw new \RuntimeException('Cannot update non-existing model');
-		}
-
-		return parent::dryUpdate($model, $attributes, $action);
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
 	public function update($model, array $attributes)
 	{
-		$method = $this->push ? 'push' : 'save';
+		if (!$model->exists) {
+			throw new \RuntimeException('Cannot update non-existant model');
+		}
 
-		return $this->dryUpdate($model, $attributes) ? $model->$method() : false;
+		return parent::update($model, $attributes);
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function delete($model)
+	public function performCreate($object, array $attributes)
 	{
-		return (bool) $model->delete();
+		return $this->perform('save', $object, $attributes);
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
-	protected function newQuery()
+	public function performUpdate($object, array $attributes)
+	{
+		return $this->perform('save', $object, $attributes);
+	}
+
+	public function performSave($model, array $attributes)
+	{
+		$method = $this->push ? 'push' : 'save';
+		return $model->fill($attributes)->$method() ? $model : false;
+	}
+
+	public function performDelete($model)
+	{
+		return $model->delete();
+	}
+
+	public function newQuery()
 	{
 		return $this->model->newQuery();
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
-	protected function updateModel($model, array $attributes)
+	public function getKeyName()
 	{
-		$model->fill($attributes);
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	protected function getModelKey($model)
-	{
-		return $model->getKey();
+		return $this->model->getQualifiedKeyName();
 	}
 }

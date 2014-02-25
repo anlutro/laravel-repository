@@ -33,6 +33,13 @@ abstract class DatabaseRepository extends AbstractRepository
 	protected $table;
 
 	/**
+	 * The primary key of the table.
+	 *
+	 * @var string
+	 */
+	protected $primaryKey = 'id';
+
+	/**
 	 * @param Illuminate\Database\Connection $db
 	 * @param string $table
 	 */
@@ -91,7 +98,7 @@ abstract class DatabaseRepository extends AbstractRepository
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getPrimaryKey()
+	public function getKeyName()
 	{
 		return "{$this->table}.{$this->primaryKey}";
 	}
@@ -101,22 +108,20 @@ abstract class DatabaseRepository extends AbstractRepository
 	 */
 	public function getNew(array $attributes = array())
 	{
-		$obj = new \StdClass;
-		foreach ($attributes as $key => $value) {
-			$obj->$key = $value;
-		}
-		return $obj;
+		return new Fluent($attributes);
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function create(array $attributes = array())
+	public function performCreate($model, array $attributes = array())
 	{
-		if (!$model = $this->makeNew($attributes)) return false;
-		
+		foreach ($attributes as $key => $value) {
+			$model->$key = $value;
+		}
+
 		$result = $this->newQuery()
-			->insert((array) $model);
+			->insert($model->toArray());
 
 		return $result ? $model : false;
 	}
@@ -124,24 +129,26 @@ abstract class DatabaseRepository extends AbstractRepository
 	/**
 	 * {@inheritdoc}
 	 */
-	public function update($model, array $attributes)
+	public function performUpdate($model, array $attributes)
 	{
-		if (!$this->dryUpdate($model, $attributes)) return false;
+		foreach ($attributes as $key => $value) {
+			$model->$key = $value;
+		}
 
-		$result = $this->newQuery()
-			->where($this->getPrimaryKey(), '=', $this->getModelKey($model))
+		return $this->newQuery()
+			->where($this->getKeyName(), '=', $model->{$this->primaryKey})
 			->update($model->toArray());
 
-		return (bool) $result;
+		return $result;
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function delete($model)
+	public function performDelete($model)
 	{
-		$result = $this->newQuery()
-			->where($this->getPrimaryKey(), '=', $this->getModelKey($model))
+		return $this->newQuery()
+			->where($this->getKeyName(), '=', $model->{$this->primaryKey})
 			->delete();
 
 		return (bool) $result;
@@ -153,23 +160,5 @@ abstract class DatabaseRepository extends AbstractRepository
 	protected function newQuery()
 	{
 		return $this->db->table($this->table);
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	protected function updateModel($model, array $attributes)
-	{
-		foreach ($attributes as $key => $value) {
-			$model->$key = $value;
-		}
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	protected function getModelKey($model)
-	{
-		return $model->{$this->primaryKey};
 	}
 }

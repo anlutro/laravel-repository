@@ -50,8 +50,10 @@ class ProjectRepository extends \c\EloquentRepository
     /**
      * This method is called before fetchMany and fetchSingle. We use it to add
      * functionality that should be present on every query.
+     *
+     * Renamed from prepareQuery in 0.5
      */
-    protected function prepareQuery($query, $many)
+    protected function beforeQuery($query, $many)
     {
         // if this->active has been set to something, we add it to the query
         if ($this->active !== null) {
@@ -80,8 +82,10 @@ class ProjectRepository extends \c\EloquentRepository
      * This method is called after fetchMany when not paginating. We use it to
      * perform operations on a collection of models before it is returned
      * from the repository.
+     *
+     * Changed from prepareCollection/preparePaginator in 0.5
      */
-    protected function prepareCollection($projects)
+    protected function afterQuery($projects)
     {
         // let's say we want to add some data onto the models after they've
         // been retrieved from the database. we want "ExtraData" which is a
@@ -101,8 +105,10 @@ class ProjectRepository extends \c\EloquentRepository
     /**
      * Determines if a model can be stored to the database or not. Use it for
      * stuff that can't (easily) be done by the validator.
+     *
+     * Changed from readyForCreate in 0.5
      */
-    protected function readyForCreate($project)
+    protected function beforeCreate($project)
     {
         // each project has an owner (a user). let's make sure that the project
         // owner is an active user - if not, add an error and return false. we
@@ -112,34 +118,6 @@ class ProjectRepository extends \c\EloquentRepository
             return false;
         }
 
-        // remember to always return true if it is valid!
         return true;
-    }
-
-    /**
-     * The project model itself has only a few fillable attributes to prevent
-     * normal users from editing the form before submitting it and sending in
-     * a bunch of illegal data. However, sometimes we want to allow more fields
-     * to be updated - for example if a project manager is updating it. In this
-     * case, we make an extra method.
-     */
-    public function updateAsManager($project, array $attributes)
-    {
-        // first we call dryUpdate which will do validation and pre-requesites.
-        // the third string param will be used when validating, so the method
-        // called on the validator will be 'validUpdateAsManager' instead of the
-        // default 'validUpdate' - this also means you can add the method
-        // 'getUpdateAsManagerRules' to your validator for custom validation
-        // rules specifically for this context.
-        if (!$this->dryUpdate($project, $attributes, 'updateAsManager')) {
-            return false;
-        }
-
-        // update extra fields...
-        $project->owner_id = $attributes['owner'];
-        $project->deadline = $attributes['deadline'];
-
-        // and return whether the save was successful
-        return $project->save();
     }
 }

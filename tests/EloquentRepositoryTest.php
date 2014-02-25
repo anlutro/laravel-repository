@@ -38,9 +38,9 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('foo', $repo->paginate(20)->getAll());
 	}
 
-	public function testFetchManyPrepare()
+	public function testQueryBefore()
 	{
-		list($model, $validator, $repo) = $this->make('RepoWithPrepares');
+		list($model, $validator, $repo) = $this->make('RepoWithBefores');
 		$query = $this->makeMockQuery();
 		$model->shouldReceive('newQuery')->andReturn($query);
 		$query->shouldReceive('prepareQuery')->once();
@@ -49,15 +49,14 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('foo', $repo->getAll());
 	}
 
-	public function testFetchManyPaginatedPrepare()
+	public function testQueryAfter()
 	{
-		list($model, $validator, $repo) = $this->make('RepoWithPrepares');
+		list($model, $validator, $repo) = $this->make('RepoWithAfters');
 		$query = $this->makeMockQuery();
 		$result = m::mock();
 		$model->shouldReceive('newQuery')->andReturn($query);
-		$query->shouldReceive('prepareQuery')->once();
 		$query->shouldReceive('paginate')->andReturn($result);
-		$result->shouldReceive('preparePaginator')->once();
+		$result->shouldReceive('prepareResults')->once();
 
 		$this->assertSame($result, $repo->paginate(20)->getAll());
 	}
@@ -75,20 +74,20 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 
 	public function testFetchSinglePrepare()
 	{
-		list($model, $validator, $repo) = $this->make('RepoWithPrepares');
+		list($model, $validator, $repo) = $this->make('RepoWithAfters');
 		$query = $this->makeMockQuery();
 		$result = m::mock();
 		$model->shouldReceive('newQuery->where')->andReturn($query);
-		$query->shouldReceive('prepareQuery')->once();
 		$query->shouldReceive('first')->once()->andReturn($result);
-		$result->shouldReceive('prepareModel')->once();
+		$result->shouldReceive('prepareResults')->once();
 
 		$this->assertSame($result, $repo->getByKey(1));
 	}
 
 	public function testInvalidCreate()
 	{
-		list($model, $validator, $repo) = $this->make('RepoWithPrepares');
+		list($model, $validator, $repo) = $this->make('RepoWithBefores');
+		$model->shouldReceive('newInstance')->once();
 		$validator->shouldReceive('validCreate')->andReturn(false);
 		$validator->shouldReceive('errors->getMessages')->andReturn([]);
 
@@ -98,9 +97,9 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 	public function testCreate()
 	{
 		list($model, $validator, $repo) = $this->make();
+		$model->shouldReceive('newInstance')->once()->andReturn($mock = m::mock(['fill->save' => true]));
 		$validator->shouldReceive('validCreate')->andReturn(true);
-		$model->shouldReceive('newInstance')->with(['foo' => 'bar'])
-			->andReturn($mock = m::mock(['save' => true]));
+		$validator->shouldReceive('validSave')->andReturn(true);
 		$this->assertSame($mock, $repo->create(['foo' => 'bar']));
 	}
 
@@ -109,7 +108,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testUpdateWhenNotExists()
 	{
-		list($model, $validator, $repo) = $this->make('RepoWithPrepares');
+		list($model, $validator, $repo) = $this->make();
 		$updateModel = new RepoTestModelStub;
 		$updateModel->exists = false;
 
@@ -135,10 +134,11 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$updateModel = $this->makeMockModel()->makePartial();
 		$updateModel->id = 'foo';
 		$updateModel->exists = true;
-		$updateModel->shouldReceive('fill')->once()->with(['foo' => 'bar']);
+		$updateModel->shouldReceive('fill')->once()->with(['foo' => 'bar'])->andReturn(m::self());
 		$updateModel->shouldReceive('save')->once()->andReturn(true);
 		$validator->shouldReceive('replace')->with('key', 'foo');
-		$validator->shouldReceive('validUpdate')->andReturn(true);
+		$validator->shouldReceive('validUpdate')->once()->andReturn(true);
+		$validator->shouldReceive('validSave')->once()->andReturn(true);
 
 		$this->assertTrue($repo->update($updateModel, ['foo' => 'bar']));
 	}
@@ -189,21 +189,39 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 
 class RepoStub extends \c\EloquentRepository {}
 
-class RepoWithPrepares extends \c\EloquentRepository
+class RepoWithBefores extends \c\EloquentRepository
 {
-	protected function prepareQuery($query, $many)
+	protected function beforeQuery($query, $many)
 	{
 		$query->prepareQuery();
 	}
 
-	public function prepareModel($model)
+	public function beforeCreate($model, $attributes)
 	{
 		$model->prepareModel();
 	}
 
-	public function preparePaginator($paginator)
+	public function beforeUpdate($model, $attributes)
 	{
-		$paginator->preparePaginator();
+		$model->prepareModel();
+	}
+}
+
+class RepoWithAfters extends \c\EloquentRepository
+{
+	public function afterQuery($results)
+	{
+		$results->prepareResults();
+	}
+
+	public function afterCreate($model)
+	{
+		$model->prepareModel();
+	}
+
+	public function afterUpdate($model)
+	{
+		$model->prepareModel();
 	}
 }
 
