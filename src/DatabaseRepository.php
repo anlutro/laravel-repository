@@ -41,11 +41,11 @@ abstract class DatabaseRepository extends AbstractRepository
 
 	/**
 	 * @param Illuminate\Database\Connection $db
-	 * @param string $table
+	 * @param c\Validator $validator
 	 */
-	public function __construct(Connection $db)
+	public function __construct(Connection $db, Validator $validator = null)
 	{
-		parent::__construct();
+		parent::__construct($validator);
 
 		if ($this->table === null) {
 			$class = get_class($this);
@@ -53,6 +53,10 @@ abstract class DatabaseRepository extends AbstractRepository
 		}
 
 		$this->setConnection($db);
+
+		if ($validator) {
+			$this->validator->replace('table', $this->table);
+		}
 	}
 
 	/**

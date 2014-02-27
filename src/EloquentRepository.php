@@ -35,12 +35,11 @@ abstract class EloquentRepository extends AbstractRepository
 	 */
 	public function __construct(Model $model, Validator $validator = null)
 	{
-		parent::__construct();
+		parent::__construct($validator);
 
 		$this->model = $model;
 
 		if ($validator) {
-			$this->validator = $validator;
 			$this->validator->replace('table', $this->model->getTable());
 		}
 	}

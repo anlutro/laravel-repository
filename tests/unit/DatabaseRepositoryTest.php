@@ -13,7 +13,7 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 	public function testGetAll()
 	{
 		$db = $this->mockConnection();
-		$repo = new DBRepoStub($db, 'table');
+		$repo = new DBRepoStub($db);
 
 		$query = $this->mockQuery();
 		$db->shouldReceive('table')->with('table')->andReturn($query);
@@ -25,7 +25,7 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 	public function testGetSingle()
 	{
 		$db = $this->mockConnection();
-		$repo = new DBRepoStub($db, 'table');
+		$repo = new DBRepoStub($db);
 
 		$query = $this->mockQuery();
 		$db->shouldReceive('table')->with('table')->andReturn($query);
@@ -40,7 +40,7 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 	{
 		$data = ['foo' => 'bar'];
 		$db = $this->mockConnection();
-		$repo = new DBRepoStub($db, 'table');
+		$repo = new DBRepoStub($db);
 
 		$query = $this->mockQuery();
 		$db->shouldReceive('table')->with('table')->andReturn($query);
@@ -54,7 +54,7 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 	{
 		$data = ['foo' => 'bar'];
 		$db = $this->mockConnection();
-		$repo = new DBRepoStub($db, 'table');
+		$repo = new DBRepoStub($db);
 
 		$query = $this->mockQuery();
 		$db->shouldReceive('table')->with('table')->andReturn($query);
@@ -68,7 +68,7 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 		$model = $this->makeModel(['id' => 1]);
 		$data = ['foo' => 'bar'];
 		$db = $this->mockConnection();
-		$repo = new DBRepoStub($db, 'table');
+		$repo = new DBRepoStub($db);
 
 		$query = $this->mockQuery();
 		$db->shouldReceive('table')->with('table')->andReturn($query);
@@ -84,7 +84,7 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 		$model = $this->makeModel(['id' => 1]);
 		$data = ['foo' => 'bar'];
 		$db = $this->mockConnection();
-		$repo = new DBRepoStub($db, 'table');
+		$repo = new DBRepoStub($db);
 
 		$query = $this->mockQuery();
 		$db->shouldReceive('table')->with('table')->andReturn($query);
@@ -99,7 +99,7 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 	{
 		$model = $this->makeModel(['id' => 1]);
 		$db = $this->mockConnection();
-		$repo = new DBRepoStub($db, 'table');
+		$repo = new DBRepoStub($db);
 
 		$query = $this->mockQuery();
 		$db->shouldReceive('table')->with('table')->andReturn($query);

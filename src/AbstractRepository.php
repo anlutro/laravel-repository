@@ -23,9 +23,11 @@ abstract class AbstractRepository
 	protected $validator;
 	protected $errors;
 
-	public function __construct()
+	public function __construct(Validator $validator = null)
 	{
 		$this->resetErrors();
+
+		if ($validator) $this->validator = $validator;
 	}
 
 	/**
@@ -157,6 +159,26 @@ abstract class AbstractRepository
 	public function getErrors()
 	{
 		return $this->errors;
+	}
+
+	/**
+	 * Set the repository's validator.
+	 *
+	 * @param c\Validator $validator
+	 */
+	public function setValidator(\c\Validator $validator)
+	{
+		$this->validator = $validator;
+	}
+
+	/**
+	 * Get the repository's validator.
+	 *
+	 * @return c\Validator
+	 */
+	public function getValidator()
+	{
+		return $this->validator;
 	}
 
 	/**
