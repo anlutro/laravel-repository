@@ -79,7 +79,7 @@ class EloquentRepositoryIntegrationTest extends \c\EloquentTestCase
 	 */
 	public function testAdvancedCustomAction()
 	{
-		$repo = $this->makeRepo(); $model = $repo->create(['name' => 'foo', 'bool' => true]);
+		$repo = $this->makeRepo(); $model = $repo->createAsAdmin(['name' => 'foo', 'bool' => true]);
 		$repo->toggle($model);
 		$this->assertEquals(false, $model->bool);
 		$this->assertEquals(true, $model->beforeToggled);
