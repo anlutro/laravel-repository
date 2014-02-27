@@ -22,8 +22,8 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 	{
 		list($model, $validator, $repo) = $this->make();
 		$query = $this->makeMockQuery();
-		$model->shouldReceive('newQuery')->andReturn($query);
-		$query->shouldReceive('get')->andReturn('foo');
+		$model->shouldReceive('newQuery')->once()->andReturn($query);
+		$query->shouldReceive('get')->once()->andReturn('foo');
 
 		$this->assertEquals('foo', $repo->getAll());
 	}
@@ -32,8 +32,8 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 	{
 		list($model, $validator, $repo) = $this->make();
 		$query = $this->makeMockQuery();
-		$model->shouldReceive('newQuery')->andReturn($query);
-		$query->shouldReceive('paginate')->with(20)->andReturn('foo');
+		$model->shouldReceive('newQuery')->once()->andReturn($query);
+		$query->shouldReceive('paginate')->once()->with(20)->andReturn('foo');
 
 		$this->assertEquals('foo', $repo->paginate(20)->getAll());
 	}
@@ -42,9 +42,9 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 	{
 		list($model, $validator, $repo) = $this->make('RepoWithBefores');
 		$query = $this->makeMockQuery();
-		$model->shouldReceive('newQuery')->andReturn($query);
+		$model->shouldReceive('newQuery')->once()->andReturn($query);
 		$query->shouldReceive('prepareQuery')->once();
-		$query->shouldReceive('get')->andReturn('foo');
+		$query->shouldReceive('get')->once()->andReturn('foo');
 
 		$this->assertEquals('foo', $repo->getAll());
 	}
@@ -54,8 +54,8 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		list($model, $validator, $repo) = $this->make('RepoWithAfters');
 		$query = $this->makeMockQuery();
 		$result = m::mock();
-		$model->shouldReceive('newQuery')->andReturn($query);
-		$query->shouldReceive('paginate')->andReturn($result);
+		$model->shouldReceive('newQuery')->once()->andReturn($query);
+		$query->shouldReceive('paginate')->once()->andReturn($result);
 		$result->shouldReceive('prepareResults')->once();
 
 		$this->assertSame($result, $repo->paginate(20)->getAll());
@@ -65,9 +65,8 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 	{
 		list($model, $validator, $repo) = $this->make();
 		$query = $this->makeMockQuery();
-		$model->shouldReceive('newQuery')->andReturn($query);
-		$model->shouldReceive('getQualifiedKeyName');
-		$query->shouldReceive('where->first')->andReturn('foo');
+		$model->shouldReceive('newQuery')->once()->andReturn($query);
+		$query->shouldReceive('where->first')->once()->andReturn('foo');
 
 		$this->assertEquals('foo', $repo->getByKey(1));
 	}
@@ -77,7 +76,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		list($model, $validator, $repo) = $this->make('RepoWithAfters');
 		$query = $this->makeMockQuery();
 		$result = m::mock();
-		$model->shouldReceive('newQuery->where')->andReturn($query);
+		$model->shouldReceive('newQuery->where')->once()->andReturn($query);
 		$query->shouldReceive('first')->once()->andReturn($result);
 		$result->shouldReceive('prepareResults')->once();
 
@@ -88,8 +87,8 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 	{
 		list($model, $validator, $repo) = $this->make('RepoWithBefores');
 		$model->shouldReceive('newInstance')->once();
-		$validator->shouldReceive('validCreate')->andReturn(false);
-		$validator->shouldReceive('errors->getMessages')->andReturn([]);
+		$validator->shouldReceive('validCreate')->once()->andReturn(false);
+		$validator->shouldReceive('errors->getMessages')->once()->andReturn([]);
 
 		$this->assertFalse($repo->create(array()));
 	}
@@ -98,8 +97,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 	{
 		list($model, $validator, $repo) = $this->make();
 		$model->shouldReceive('newInstance')->once()->andReturn($mock = m::mock(['fill->save' => true]));
-		$validator->shouldReceive('validCreate')->andReturn(true);
-		$validator->shouldReceive('validSave')->andReturn(true);
+		$validator->shouldReceive('validCreate')->once()->andReturn(true);
 		$this->assertSame($mock, $repo->create(['foo' => 'bar']));
 	}
 
@@ -121,9 +119,9 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$updateModel = new RepoTestModelStub;
 		$updateModel->id = 'foo';
 		$updateModel->exists = true;
-		$validator->shouldReceive('replace')->with('key', 'foo');
-		$validator->shouldReceive('validUpdate')->andReturn(false);
-		$validator->shouldReceive('errors->getMessages')->andReturn([]);
+		$validator->shouldReceive('replace')->once()->with('key', 'foo');
+		$validator->shouldReceive('validUpdate')->once()->andReturn(false);
+		$validator->shouldReceive('errors->getMessages')->once()->andReturn([]);
 
 		$this->assertFalse($repo->update($updateModel, array()));
 	}
@@ -136,9 +134,8 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$updateModel->exists = true;
 		$updateModel->shouldReceive('fill')->once()->with(['foo' => 'bar'])->andReturn(m::self());
 		$updateModel->shouldReceive('save')->once()->andReturn(true);
-		$validator->shouldReceive('replace')->with('key', 'foo');
+		$validator->shouldReceive('replace')->once()->with('key', 'foo');
 		$validator->shouldReceive('validUpdate')->once()->andReturn(true);
-		$validator->shouldReceive('validSave')->once()->andReturn(true);
 
 		$this->assertTrue($repo->update($updateModel, ['foo' => 'bar']));
 	}
@@ -177,7 +174,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 	public function makeMockValidator($class = 'c\Validator')
 	{
 		$mock = m::mock($class);
-		$mock->shouldReceive('replace')->with('table', 'table');
+		$mock->shouldReceive('replace')->once()->with('table', 'table');
 		return $mock;
 	}
 

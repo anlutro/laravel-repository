@@ -133,4 +133,12 @@ abstract class EloquentRepository extends AbstractRepository
 	{
 		return $this->model->getQualifiedKeyName();
 	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getEntityKey($model)
+	{
+		return $model->getKey();
+	}
 }

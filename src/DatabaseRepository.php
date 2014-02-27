@@ -161,4 +161,12 @@ abstract class DatabaseRepository extends AbstractRepository
 	{
 		return $this->db->table($this->table);
 	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getEntityKey($model)
+	{
+		return $model->{$this->primaryKey};
+	}
 }

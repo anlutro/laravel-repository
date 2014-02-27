@@ -204,6 +204,10 @@ abstract class AbstractRepository
 	 */
 	public function update($entity, array $attributes)
 	{
+		if ($this->validator) {
+			$this->validator->replace('key', $this->getEntityKey($entity));
+		}
+
 		return $this->perform('update', $entity, $attributes, true) ? true : false;
 	}
 
@@ -319,4 +323,13 @@ abstract class AbstractRepository
 	 * @return string
 	 */
 	protected abstract function getKeyName();
+
+	/**
+	 * Get the primary key of an entity.
+	 *
+	 * @param  mixed $entity
+	 *
+	 * @return mixed
+	 */
+	protected abstract function getEntityKey($entity);
 }
