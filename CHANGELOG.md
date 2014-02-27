@@ -1,3 +1,12 @@
+### 0.5
+
+Major refactor
+
+- readyFor* methods removed
+- prepare* methods replaced with before* and after*
+
+See examples and integration test for examples of the new structure.
+
 ### 0.4
 
 Moved logic to an abstract class to allow more work on the DatabaseRepository.
