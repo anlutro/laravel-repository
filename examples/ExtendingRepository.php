@@ -12,22 +12,7 @@ class ExtendedRepository extends \c\EloquentRepository
 	}
 
 	/**
-	 * The easiest way to add a new repository action with some custom behaviour.
-	 */
-	public function createAsAdmin($model, array $attributes)
-	{
-		// set some unfillable attributes that can't be set via the regular
-		// create() method for security reasons.
-		$model->is_active = array_get($attributes, 'is_active');
-		$model->user_level = array_get($attributes, 'user_level');
-
-		// ... then perform the regular create action.
-		return $this->perform('create', $model, $attributes);
-	}
-
-	/**
-	 * You can also use a custom $this->perform call to call before, perform and
-	 * after methods automatically, as well as validation.
+	 * Add custom behaviour like this
 	 */
 	public function updateAsAdmin($model, array $attributes)
 	{
@@ -47,6 +32,7 @@ class ExtendedRepository extends \c\EloquentRepository
 
 		// 4th argument is whether or not to validate. in this case we've already
 		// validated via $this->perform('updateAsAdmin') so we specify false.
+		// by doing this we also call beforeUpdate, performUpdate, afterUpdate
 		$this->perform('update', $model, $attributes, false);
 	}
 

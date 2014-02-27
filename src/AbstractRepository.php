@@ -1,8 +1,19 @@
 <?php
+/**
+ * Laravel 4 Repository classes
+ *
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-repository
+ */
+
 namespace c;
 
 use Illuminate\Support\MessageBag;
 
+/**
+ * Abstract repository class.
+ */
 abstract class AbstractRepository
 {
 	protected $throwExceptions = false;
@@ -17,6 +28,20 @@ abstract class AbstractRepository
 		$this->resetErrors();
 	}
 
+	/**
+	 * Perform an action.
+	 *
+	 * Calls $this->before{$action} and $this->after{$action} before or after
+	 * $this->perform{action} has been called. Also calls $this->valid($action,
+	 * $attributes) for validation.
+	 *
+	 * @param  string  $action
+	 * @param  mixed   $object
+	 * @param  array   $attributes
+	 * @param  boolean $validate
+	 *
+	 * @return mixed
+	 */
 	protected function perform($action, $object, $attributes = array(), $validate = true)
 	{
 		$perform = 'perform' . ucfirst($action);
@@ -39,6 +64,15 @@ abstract class AbstractRepository
 		return $result;
 	}
 
+	/**
+	 * Perform a before or after action.
+	 *
+	 * @param  string $which  before or after
+	 * @param  string $action
+	 * @param  array  $args
+	 *
+	 * @return false|null
+	 */
 	protected function doBeforeOrAfter($which, $action, array $args)
 	{
 		$method = $which.ucfirst($action);
@@ -57,6 +91,14 @@ abstract class AbstractRepository
 		}
 	}
 
+	/**
+	 * Validate a set of attributes against a certain action.
+	 *
+	 * @param  string $action
+	 * @param  array  $attributes
+	 *
+	 * @return boolean
+	 */
 	public function valid($action, array $attributes)
 	{
 		if ($this->validator === null) {
@@ -73,6 +115,14 @@ abstract class AbstractRepository
 		return $result;
 	}
 
+	/**
+	 * Perform a query.
+	 *
+	 * @param  mixed   $query
+	 * @param  boolean $many
+	 *
+	 * @return mixed
+	 */
 	protected function performQuery($query, $many)
 	{
 		if ($many === false) {
@@ -89,58 +139,128 @@ abstract class AbstractRepository
 			: $query->paginate($this->paginate);
 	}
 
+	/**
+	 * Reset the repository's errors.
+	 *
+	 * @return void
+	 */
 	protected function resetErrors()
 	{
 		$this->errors = new MessageBag;
 	}
 
+	/**
+	 * Toggle pagination.
+	 *
+	 * @param  false|int $toggle
+	 *
+	 * @return static
+	 */
 	public function paginate($toggle)
 	{
 		$this->paginate = $toggle === false ? false : (int) $toggle;
 		return $this;
 	}
 
+	/**
+	 * Do a before action.
+	 *
+	 * @see  doBeforeOrAfter
+	 */
 	protected function doBefore($action, $object, $attributes)
 	{
 		return $this->doBeforeOrAfter('before', $action, [$object, $attributes]);
 	}
 
+	/**
+	 * Do an after action.
+	 *
+	 * @see  doBeforeOrAfter
+	 */
 	protected function doAfter($action, $result, $attributes)
 	{
 		return $this->doBeforeOrAfter('after', $action, [$result, $attributes]);
 	}
 
+	/**
+	 * Create and persist a new entity with the given attributes.
+	 *
+	 * @param  array  $attributes
+	 *
+	 * @return mixed
+	 */
 	public function create(array $attributes)
 	{
 		return $this->perform('create', $this->getNew($attributes), $attributes, true);
 	}
 
-	public function update($object, $attributes)
+	/**
+	 * Update an entity with the given attributes and persist it.
+	 *
+	 * @param  mixed  $entity
+	 * @param  array  $attributes
+	 *
+	 * @return boolean
+	 */
+	public function update($entity, array $attributes)
 	{
-		return $this->perform('update', $object, $attributes, true) ? true : false;
+		return $this->perform('update', $entity, $attributes, true) ? true : false;
 	}
 
-	public function delete($object)
+	/**
+	 * Delete an entity.
+	 *
+	 * @param  mixed $entity
+	 *
+	 * @return boolean
+	 */
+	public function delete($entity)
 	{
-		return $this->perform('delete', $object, [], false);
+		return $this->perform('delete', $entity, [], false);
 	}
 
+	/**
+	 * Perform a query, fetching multiple rows.
+	 *
+	 * @param  mixed  $query
+	 *
+	 * @return mixed
+	 */
 	protected function fetchMany($query)
 	{
 		return $this->perform('query', $query, true, false);
 	}
 
+	/**
+	 * Perform a query, fetching a single row.
+	 *
+	 * @param  mixed  $query
+	 *
+	 * @return mixed
+	 */
 	protected function fetchSingle($query)
 	{
 		return $this->perform('query', $query, false, false);
 	}
 
+	/**
+	 * Get all the entities for the repository.
+	 *
+	 * @return mixed
+	 */
 	public function getAll()
 	{
 		$query = $this->newQuery();
 		return $this->fetchMany($query);
 	}
 
+	/**
+	 * Get a specific row by key in the repository.
+	 *
+	 * @param  mixed $key
+	 *
+	 * @return mixed
+	 */
 	public function getByKey($key)
 	{
 		$query = $this->newQuery()
@@ -148,10 +268,55 @@ abstract class AbstractRepository
 		return $this->fetchSingle($query);
 	}
 
+	/**
+	 * Get a new query builder instance.
+	 *
+	 * @return Illuminate\Database\Query\Builder
+	 */
 	protected abstract function newQuery();
+
+	/**
+	 * Get a new entity instance.
+	 *
+	 * @param  array  $attributes
+	 *
+	 * @return mixed
+	 */
 	protected abstract function getNew(array $attributes = array());
-	protected abstract function performCreate($object, array $attributes);
-	protected abstract function performUpdate($object, array $attributes);
-	protected abstract function performDelete($object);
+
+	/**
+	 * Perform a create action.
+	 *
+	 * @param  mixed  $entity
+	 * @param  array  $attributes
+	 *
+	 * @return mixed
+	 */
+	protected abstract function performCreate($entity, array $attributes);
+
+	/**
+	 * Perform an update action.
+	 *
+	 * @param  mixed  $entity
+	 * @param  array  $attributes
+	 *
+	 * @return boolean
+	 */
+	protected abstract function performUpdate($entity, array $attributes);
+
+	/**
+	 * Perform a delete action.
+	 *
+	 * @param  mixed $entity
+	 *
+	 * @return boolean
+	 */
+	protected abstract function performDelete($entity);
+
+	/**
+	 * Get the name of the primary key to query for.
+	 *
+	 * @return string
+	 */
 	protected abstract function getKeyName();
 }

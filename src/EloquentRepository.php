@@ -73,6 +73,9 @@ abstract class EloquentRepository extends AbstractRepository
 		return $this->model->newInstance($attributes);
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function update($model, array $attributes)
 	{
 		if (!$model->exists) {
@@ -82,32 +85,50 @@ abstract class EloquentRepository extends AbstractRepository
 		return parent::update($model, $attributes);
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function performCreate($object, array $attributes)
 	{
 		return $this->perform('save', $object, $attributes);
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function performUpdate($object, array $attributes)
 	{
 		return $this->perform('save', $object, $attributes);
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function performSave($model, array $attributes)
 	{
 		$method = $this->push ? 'push' : 'save';
 		return $model->fill($attributes)->$method() ? $model : false;
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function performDelete($model)
 	{
 		return $model->delete();
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function newQuery()
 	{
 		return $this->model->newQuery();
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getKeyName()
 	{
 		return $this->model->getQualifiedKeyName();
