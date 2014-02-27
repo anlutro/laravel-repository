@@ -150,6 +150,16 @@ abstract class AbstractRepository
 	}
 
 	/**
+	 * Get the repository's error messages.
+	 *
+	 * @return Illuminate\Support\MessageBag
+	 */
+	public function getErrors()
+	{
+		return $this->errors;
+	}
+
+	/**
 	 * Toggle pagination.
 	 *
 	 * @param  false|int $toggle
