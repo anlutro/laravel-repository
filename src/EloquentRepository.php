@@ -87,17 +87,18 @@ abstract class EloquentRepository extends AbstractRepository
 	/**
 	 * {@inheritdoc}
 	 */
-	public function performCreate($object, array $attributes)
+	public function performCreate($model, array $attributes)
 	{
-		return $this->perform('save', $object, $attributes, false);
+		return $this->perform('save', $model, $attributes, false);
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function performUpdate($object, array $attributes)
+	public function performUpdate($model, array $attributes)
 	{
-		return $this->perform('save', $object, $attributes, false);
+		$model->fill($attributes);
+		return $this->perform('save', $model, $attributes, false);
 	}
 
 	/**
@@ -106,7 +107,7 @@ abstract class EloquentRepository extends AbstractRepository
 	public function performSave($model, array $attributes)
 	{
 		$method = $this->push ? 'push' : 'save';
-		return $model->fill($attributes)->$method() ? $model : false;
+		return $model->$method() ? $model : false;
 	}
 
 	/**

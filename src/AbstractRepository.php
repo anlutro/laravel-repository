@@ -18,8 +18,6 @@ abstract class AbstractRepository
 {
 	protected $throwExceptions = false;
 	protected $paginate = false;
-	protected $before = [];
-	protected $after = [];
 	protected $validator;
 	protected $errors;
 
@@ -81,15 +79,6 @@ abstract class AbstractRepository
 		if (method_exists($this, $method)) {
 			$result = call_user_func_array([$this, $method], $args);
 			if ($result === false) return $result;
-		}
-
-		if (array_key_exists($action, $this->$which)) {
-			foreach ((array) $this->$which[$action] as $callback) {
-				if (is_string($callback) && method_exists($this, $callback)) {
-					$callback = [$this, $callback];
-				}
-				$result = call_user_func_array($callback, $args);
-			}
 		}
 	}
 
