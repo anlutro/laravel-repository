@@ -123,7 +123,7 @@ class ERIT_TestRepository extends \c\EloquentRepository
 
 	public function createAsAdmin(array $attributes)
 	{
-		$model = $this->getNew();
+		$model = $this->getNew($attributes);
 		$model->bool = array_get($attributes, 'bool');
 		return $this->perform('create', $model, $attributes);
 	}

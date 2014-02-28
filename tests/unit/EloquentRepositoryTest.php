@@ -96,7 +96,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 	public function testCreate()
 	{
 		list($model, $validator, $repo) = $this->make();
-		$model->shouldReceive('newInstance')->once()->andReturn($mock = m::mock(['fill->save' => true]));
+		$model->shouldReceive('newInstance')->once()->andReturn($mock = m::mock(['save' => true]));
 		$validator->shouldReceive('validCreate')->once()->andReturn(true);
 		$this->assertSame($mock, $repo->create(['foo' => 'bar']));
 	}
