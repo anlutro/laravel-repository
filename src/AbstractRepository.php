@@ -143,7 +143,7 @@ abstract class AbstractRepository
 	/**
 	 * Get the repository's error messages.
 	 *
-	 * @return Illuminate\Support\MessageBag
+	 * @return \Illuminate\Support\MessageBag
 	 */
 	public function getErrors()
 	{
