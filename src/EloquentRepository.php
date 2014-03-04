@@ -18,7 +18,7 @@ use Illuminate\Support\MessageBag;
 abstract class EloquentRepository extends AbstractRepository
 {
 	/**
-	 * @var Illuminate\Database\Eloquent\Model
+	 * @var \Illuminate\Database\Eloquent\Model
 	 */
 	protected $model;
 
@@ -30,8 +30,8 @@ abstract class EloquentRepository extends AbstractRepository
 	protected $push = false;
 
 	/**
-	 * @param Illuminate\Database\Eloquent\Model $model
-	 * @param c\Validator $validator
+	 * @param \Illuminate\Database\Eloquent\Model $model
+	 * @param \c\Validator $validator
 	 */
 	public function __construct(Model $model, Validator $validator = null)
 	{
@@ -47,7 +47,7 @@ abstract class EloquentRepository extends AbstractRepository
 	/**
 	 * Get the repository's model.
 	 *
-	 * @return Illuminate\Database\Eloquent\Model
+	 * @return \Illuminate\Database\Eloquent\Model
 	 */
 	public function getModel()
 	{
@@ -57,7 +57,7 @@ abstract class EloquentRepository extends AbstractRepository
 	/**
 	 * Set the repository's model.
 	 *
-	 * @param $model  Illuminate\Database\Eloquent\Model
+	 * @param $model  \Illuminate\Database\Eloquent\Model
 	 */
 	public function setModel($model)
 	{
@@ -66,6 +66,8 @@ abstract class EloquentRepository extends AbstractRepository
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @return  \Illuminate\Database\Eloquent\Model
 	 */
 	public function getNew(array $attributes = array())
 	{
@@ -86,6 +88,8 @@ abstract class EloquentRepository extends AbstractRepository
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @return  \Illuminate\Database\Eloquent\Model
 	 */
 	public function performCreate($model, array $attributes)
 	{
@@ -120,6 +124,8 @@ abstract class EloquentRepository extends AbstractRepository
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @return \Illuminate\Database\Eloquent\Builder
 	 */
 	public function newQuery()
 	{

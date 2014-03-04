@@ -153,7 +153,7 @@ abstract class AbstractRepository
 	/**
 	 * Set the repository's validator.
 	 *
-	 * @param c\Validator $validator
+	 * @param \c\Validator $validator
 	 */
 	public function setValidator(\c\Validator $validator)
 	{
@@ -163,7 +163,7 @@ abstract class AbstractRepository
 	/**
 	 * Get the repository's validator.
 	 *
-	 * @return c\Validator
+	 * @return \c\Validator
 	 */
 	public function getValidator()
 	{
@@ -295,8 +295,6 @@ abstract class AbstractRepository
 
 	/**
 	 * Get a new query builder instance.
-	 *
-	 * @return Illuminate\Database\Query\Builder
 	 */
 	protected abstract function newQuery();
 
@@ -304,8 +302,6 @@ abstract class AbstractRepository
 	 * Get a new entity instance.
 	 *
 	 * @param  array  $attributes
-	 *
-	 * @return mixed
 	 */
 	protected abstract function getNew(array $attributes = array());
 
@@ -314,8 +310,6 @@ abstract class AbstractRepository
 	 *
 	 * @param  mixed  $entity
 	 * @param  array  $attributes
-	 *
-	 * @return mixed
 	 */
 	protected abstract function performCreate($entity, array $attributes);
 

@@ -21,7 +21,7 @@ abstract class DatabaseRepository extends AbstractRepository
 	/**
 	 * The database connection to use.
 	 *
-	 * @var Illuminate\Database\Connection
+	 * @var \Illuminate\Database\Connection
 	 */
 	protected $db;
 
@@ -40,8 +40,8 @@ abstract class DatabaseRepository extends AbstractRepository
 	protected $primaryKey = 'id';
 
 	/**
-	 * @param Illuminate\Database\Connection $db
-	 * @param c\Validator $validator
+	 * @param \Illuminate\Database\Connection $db
+	 * @param \c\Validator $validator
 	 */
 	public function __construct(Connection $db, Validator $validator = null)
 	{
@@ -62,7 +62,7 @@ abstract class DatabaseRepository extends AbstractRepository
 	/**
 	 * Set the connection to run queries on.
 	 *
-	 * @param Illuminate\Database\Connection $db
+	 * @param \Illuminate\Database\Connection $db
 	 */
 	public function setConnection(Connection $db)
 	{
@@ -72,7 +72,7 @@ abstract class DatabaseRepository extends AbstractRepository
 	/**
 	 * Get the connection instance.
 	 *
-	 * @return Illuminate\Database\Connection
+	 * @return \Illuminate\Database\Connection
 	 */
 	public function getConnection()
 	{
@@ -109,6 +109,8 @@ abstract class DatabaseRepository extends AbstractRepository
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @return  \Illuminate\Support\Fluent
 	 */
 	public function getNew(array $attributes = array())
 	{
@@ -117,6 +119,8 @@ abstract class DatabaseRepository extends AbstractRepository
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @return  \Illuminate\Support\Fluent|false
 	 */
 	public function performCreate($model, array $attributes = array())
 	{
@@ -160,6 +164,8 @@ abstract class DatabaseRepository extends AbstractRepository
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @return  \Illuminate\Database\Query\Builder
 	 */
 	protected function newQuery()
 	{
