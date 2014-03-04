@@ -86,7 +86,9 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 	public function testInvalidCreate()
 	{
 		list($model, $validator, $repo) = $this->make('RepoWithBefores');
-		$model->shouldReceive('newInstance')->once();
+		$mockModel = $this->makeMockModel();
+		$mockModel->shouldReceive('prepareModel')->once();
+		$model->shouldReceive('newInstance')->once()->andReturn($mockModel);
 		$validator->shouldReceive('validCreate')->once()->andReturn(false);
 		$validator->shouldReceive('errors->getMessages')->once()->andReturn([]);
 
