@@ -270,6 +270,21 @@ abstract class AbstractRepository
 	}
 
 	/**
+	 * Perform a query, fetching an array of columns.
+	 *
+	 * @param  mixed  $query
+	 * @param  string $column
+	 * @param  string $key    Column to be used as the array keys
+	 *
+	 * @return array
+	 */
+	protected function fetchList($query, $column = 'id', $key = null)
+	{
+		$this->doBefore('query', $query, true);
+		return $query->lists($column, $key);
+	}
+
+	/**
 	 * Get all the entities for the repository.
 	 *
 	 * @return mixed
@@ -292,6 +307,19 @@ abstract class AbstractRepository
 		$query = $this->newQuery()
 			->where($this->getKeyName(), '=', $key);
 		return $this->fetchSingle($query);
+	}
+
+	/**
+	 * Get a list of columns from the repository.
+	 *
+	 * @param  string $column
+	 * @param  string $key    Column to be used as the array keys
+	 *
+	 * @return array
+	 */
+	public function getList($column = 'id', $key = null)
+	{
+		$this->fetchList($this->newQuery(), $column, $key);
 	}
 
 	/**
