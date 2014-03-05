@@ -9,6 +9,7 @@
 
 namespace c;
 
+use Closure;
 use Illuminate\Support\MessageBag;
 
 /**
@@ -291,6 +292,20 @@ abstract class AbstractRepository
 		$query = $this->newQuery()
 			->where($this->getKeyName(), '=', $key);
 		return $this->fetchSingle($query);
+	}
+
+	/**
+	 * Perform a database transaction.
+	 *
+	 * The Connection object will be passed as a first argument to the closure.
+	 *
+	 * @param  \Closure $closure
+	 *
+	 * @return mixed
+	 */
+	public function transaction(Closure $closure)
+	{
+		return $this->getConnection()->transaction($closure);
 	}
 
 	/**
