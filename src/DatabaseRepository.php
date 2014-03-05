@@ -70,9 +70,7 @@ abstract class DatabaseRepository extends AbstractRepository
 	}
 
 	/**
-	 * Get the connection instance.
-	 *
-	 * @return \Illuminate\Database\Connection
+	 * {@inheritdoc}
 	 */
 	public function getConnection()
 	{

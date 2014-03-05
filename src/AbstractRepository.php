@@ -294,6 +294,13 @@ abstract class AbstractRepository
 	}
 
 	/**
+	 * Get the connection the repository uses.
+	 *
+	 * @return \Illuminate\Database\Connection
+	 */
+	protected abstract function getConnection();
+
+	/**
 	 * Get a new query builder instance.
 	 */
 	protected abstract function newQuery();

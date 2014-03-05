@@ -65,9 +65,7 @@ abstract class EloquentRepository extends AbstractRepository
 	}
 
 	/**
-	 * Get the connection the repository uses.
-	 *
-	 * @return \Illuminate\Database\Connection
+	 * {@inheritdoc}
 	 */
 	public function getConnection()
 	{
