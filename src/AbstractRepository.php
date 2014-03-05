@@ -185,6 +185,24 @@ abstract class AbstractRepository
 	}
 
 	/**
+	 * Toggle throwing of exceptions.
+	 *
+	 * @param  boolean $toggle
+	 *
+	 * @return static
+	 */
+	public function toggleExceptions($toggle)
+	{
+		$this->throwExceptions = (bool) $toggle;
+
+		if ($this->validator) {
+			$this->validator->toggleExceptions(true);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Do a before action.
 	 *
 	 * @see  doBeforeOrAfter
