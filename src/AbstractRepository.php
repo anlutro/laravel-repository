@@ -337,7 +337,7 @@ abstract class AbstractRepository
 	 */
 	public function getList($column = 'id', $key = null)
 	{
-		$this->fetchList($this->newQuery(), $column, $key);
+		return $this->fetchList($this->newQuery(), $column, $key);
 	}
 
 	/**
