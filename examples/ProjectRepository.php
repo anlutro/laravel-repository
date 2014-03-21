@@ -7,7 +7,7 @@
  * $projectRepo->onlyInactive()->paginate(20)->getAll();
  * $projectRepo->toggleExceptions(true)->getByKey($id);
  */
-class ProjectRepository extends \c\EloquentRepository
+class ProjectRepository extends \anlutro\LaravelRepository\EloquentRepository
 {
     /**
      * Override the constructor. In PHP, you can override type hints in constructors,

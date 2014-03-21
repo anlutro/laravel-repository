@@ -126,7 +126,7 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 	}
 }
 
-class DBRepoStub extends \c\DatabaseRepository
+class DBRepoStub extends \anlutro\LaravelRepository\DatabaseRepository
 {
 	protected $table = 'table';
 }

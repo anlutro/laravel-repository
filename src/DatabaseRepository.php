@@ -7,7 +7,7 @@
  * @package  l4-repository
  */
 
-namespace c;
+namespace anlutro\LaravelRepository;
 
 use Illuminate\Database\Connection;
 use Illuminate\Support\Fluent;

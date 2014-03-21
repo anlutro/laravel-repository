@@ -1,6 +1,6 @@
 <?php
 
-class EloquentRepositoryIntegrationTest extends \c\EloquentTestCase
+class EloquentRepositoryIntegrationTest extends \anlutro\LaravelTesting\EloquentTestCase
 {
 	public function testCreate()
 	{
@@ -114,7 +114,7 @@ class ERIT_TestMigration extends \Illuminate\Database\Migrations\Migration
 	}
 }
 
-class ERIT_TestRepository extends \c\EloquentRepository
+class ERIT_TestRepository extends \anlutro\LaravelRepository\EloquentRepository
 {
 	public function __construct(ERIT_TestModel $model)
 	{

@@ -7,7 +7,7 @@
  * @package  l4-repository
  */
 
-namespace c;
+namespace anlutro\LaravelRepository;
 
 class NotFoundException extends \Exception
 {

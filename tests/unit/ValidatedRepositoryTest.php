@@ -8,7 +8,7 @@ class ValidatedRepositoryTest extends PHPUnit_Framework_TestCase
 	{
 		$model = m::mock('Illuminate\Database\Eloquent\Model');
 		$model->shouldReceive('getTable')->once()->andReturn('table');
-		$validator = m::mock('c\Validator');
+		$validator = m::mock('anlutro\LaravelValidation\Validator');
 		$validator->shouldReceive('replace')->once()->with('table', 'table');
 		$repo = new ValidatedRepositoryStub($model, $validator);
 
@@ -22,4 +22,4 @@ class ValidatedRepositoryTest extends PHPUnit_Framework_TestCase
 	}
 }
 
-class ValidatedRepositoryStub extends \c\EloquentRepository {}
+class ValidatedRepositoryStub extends \anlutro\LaravelRepository\EloquentRepository {}

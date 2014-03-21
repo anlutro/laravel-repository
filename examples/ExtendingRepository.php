@@ -4,7 +4,7 @@
  * A little more complex example showing how you can extend the repository to
  * add your own custom actions as well as before/after behaviour.
  */
-class ExtendedRepository extends \c\EloquentRepository
+class ExtendedRepository extends \anlutro\LaravelRepository\EloquentRepository
 {
 	public function __construct(MyModel $model, MyValidator $validator)
 	{

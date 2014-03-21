@@ -7,10 +7,11 @@
  * @package  l4-repository
  */
 
-namespace c;
+namespace anlutro\LaravelRepository;
 
 use Closure;
 use Illuminate\Support\MessageBag;
+use anlutro\LaravelValidation\Validator;
 
 /**
  * Abstract repository class.

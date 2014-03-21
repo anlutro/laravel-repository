@@ -14,7 +14,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$v = $this->makeMockValidator();
 		$r = $this->makeRepo($m, $v);
 
-		$this->assertInstanceOf('c\EloquentRepository', $r);
+		$this->assertInstanceOf('anlutro\LaravelRepository\EloquentRepository', $r);
 		$this->assertSame($m, $r->getModel());
 	}
 
@@ -173,7 +173,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		return $mock;
 	}
 
-	public function makeMockValidator($class = 'c\Validator')
+	public function makeMockValidator($class = 'anlutro\LaravelValidation\Validator')
 	{
 		$mock = m::mock($class);
 		$mock->shouldReceive('replace')->once()->with('table', 'table');
@@ -186,9 +186,9 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 	}
 }
 
-class RepoStub extends \c\EloquentRepository {}
+class RepoStub extends \anlutro\LaravelRepository\EloquentRepository {}
 
-class RepoWithBefores extends \c\EloquentRepository
+class RepoWithBefores extends \anlutro\LaravelRepository\EloquentRepository
 {
 	protected function beforeQuery($query, $many)
 	{
@@ -206,7 +206,7 @@ class RepoWithBefores extends \c\EloquentRepository
 	}
 }
 
-class RepoWithAfters extends \c\EloquentRepository
+class RepoWithAfters extends \anlutro\LaravelRepository\EloquentRepository
 {
 	public function afterQuery($results)
 	{

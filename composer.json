@@ -15,11 +15,11 @@
 	},
 	"require-dev": {
 		"mockery/mockery": "dev-master",
-		"anlutro/l4-testing": "0.1.*"
+		"anlutro/l4-testing": "dev-master"
 	},
 	"autoload": {
 		"psr-4": {
-			"c\\": "src/"
+			"anlutro\\LaravelRepository\\": "src/"
 		}
 	},
 	"minimum-stability": "stable"

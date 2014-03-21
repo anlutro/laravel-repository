@@ -7,10 +7,11 @@
  * @package  l4-repository
  */
 
-namespace c;
+namespace anlutro\LaravelRepository;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\MessageBag;
+use anlutro\LaravelValidation\Validator;
 
 /**
  * Abstract Eloquent repository that provides some basic functionality.
