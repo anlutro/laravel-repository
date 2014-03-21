@@ -11,11 +11,11 @@
 	"require": {
 		"php": ">=5.4.0",
 		"illuminate/database": "~4.1",
-		"anlutro/l4-validation": "dev-master"
+		"anlutro/l4-validation": "0.5.*"
 	},
 	"require-dev": {
 		"mockery/mockery": "dev-master",
-		"anlutro/l4-testing": "dev-master"
+		"anlutro/l4-testing": "0.2.*"
 	},
 	"autoload": {
 		"psr-4": {
