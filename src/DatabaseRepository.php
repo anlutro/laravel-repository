@@ -41,7 +41,7 @@ abstract class DatabaseRepository extends AbstractRepository
 
 	/**
 	 * @param \Illuminate\Database\Connection $db
-	 * @param \c\Validator $validator
+	 * @param \anlutro\LaravelValidation\Validator $validator
 	 */
 	public function __construct(Connection $db, Validator $validator = null)
 	{

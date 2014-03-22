@@ -32,7 +32,7 @@ abstract class EloquentRepository extends AbstractRepository
 
 	/**
 	 * @param \Illuminate\Database\Eloquent\Model $model
-	 * @param \c\Validator $validator
+	 * @param \anlutro\LaravelValidation\Validator $validator
 	 */
 	public function __construct(Model $model, Validator $validator = null)
 	{

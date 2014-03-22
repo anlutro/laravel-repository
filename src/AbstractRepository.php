@@ -155,9 +155,9 @@ abstract class AbstractRepository
 	/**
 	 * Set the repository's validator.
 	 *
-	 * @param \c\Validator $validator
+	 * @param \anlutro\LaravelValidation\Validator $validator
 	 */
-	public function setValidator(\c\Validator $validator)
+	public function setValidator(Validator $validator)
 	{
 		$this->validator = $validator;
 	}
