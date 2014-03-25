@@ -102,6 +102,7 @@ abstract class EloquentRepository extends AbstractRepository
 	 */
 	public function performCreate($model, array $attributes)
 	{
+		$model->fill($attributes);
 		return $this->perform('save', $model, $attributes, false);
 	}
 

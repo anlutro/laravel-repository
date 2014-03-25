@@ -51,12 +51,12 @@ abstract class AbstractRepository
 			throw new \BadMethodCallException("Method $perform does not exist on this class");
 		}
 
-		$beforeResult = $this->doBefore($action, $object, $attributes);
-		if ($beforeResult === false) return $beforeResult;
-
 		if ($validate === true) {
 			if (!$this->valid($action, $attributes)) return false;
 		}
+
+		$beforeResult = $this->doBefore($action, $object, $attributes);
+		if ($beforeResult === false) return $beforeResult;
 
 		$result = call_user_func_array([$this, $perform], [$object, $attributes]);
 		if ($result === false) return $result;
@@ -232,7 +232,7 @@ abstract class AbstractRepository
 	 */
 	public function create(array $attributes)
 	{
-		return $this->perform('create', $this->getNew($attributes), $attributes, true);
+		return $this->perform('create', $this->getNew(), $attributes, true);
 	}
 
 	/**
