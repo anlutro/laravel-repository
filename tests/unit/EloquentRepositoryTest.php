@@ -11,7 +11,8 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		m::close();
 	}
 
-	public function testInitialize()
+	/** @test */
+	public function initialize()
 	{
 		$m = $this->makeMockModel();
 		$v = $this->makeMockValidator();
@@ -21,7 +22,8 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertSame($m, $r->getModel());
 	}
 
-	public function testGetAll()
+	/** @test */
+	public function getAll()
 	{
 		list($model, $validator, $repo) = $this->make();
 		$query = $this->makeMockQuery();
@@ -31,7 +33,8 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('foo', $repo->getAll());
 	}
 
-	public function testGetAllPaginated()
+	/** @test */
+	public function getAllPaginated()
 	{
 		list($model, $validator, $repo) = $this->make();
 		$query = $this->makeMockQuery();
@@ -41,7 +44,8 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('foo', $repo->paginate(20)->getAll());
 	}
 
-	public function testQueryBefore()
+	/** @test */
+	public function queryBefore()
 	{
 		list($model, $validator, $repo) = $this->make(__NAMESPACE__.'\RepoWithBefores');
 		$query = $this->makeMockQuery();
@@ -52,7 +56,8 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('foo', $repo->getAll());
 	}
 
-	public function testQueryAfter()
+	/** @test */
+	public function queryAfter()
 	{
 		list($model, $validator, $repo) = $this->make(__NAMESPACE__.'\RepoWithAfters');
 		$query = $this->makeMockQuery();
@@ -64,7 +69,8 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertSame($result, $repo->paginate(20)->getAll());
 	}
 
-	public function testGetByKey()
+	/** @test */
+	public function getByKey()
 	{
 		list($model, $validator, $repo) = $this->make();
 		$query = $this->makeMockQuery();
@@ -74,7 +80,8 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('foo', $repo->getByKey(1));
 	}
 
-	public function testFetchSinglePrepare()
+	/** @test */
+	public function fetchSinglePrepare()
 	{
 		list($model, $validator, $repo) = $this->make(__NAMESPACE__.'\RepoWithAfters');
 		$query = $this->makeMockQuery();
@@ -86,7 +93,8 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertSame($result, $repo->getByKey(1));
 	}
 
-	public function testInvalidCreate()
+	/** @test */
+	public function invalidCreate()
 	{
 		list($model, $validator, $repo) = $this->make(__NAMESPACE__.'\RepoWithBefores');
 		$mockModel = $this->makeMockModel();
@@ -97,7 +105,8 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertFalse($repo->create([]));
 	}
 
-	public function testCreate()
+	/** @test */
+	public function create()
 	{
 		list($model, $validator, $repo) = $this->make();
 		$model->shouldReceive('newInstance')->once()->with([])->andReturn($mock = m::mock());
@@ -107,11 +116,10 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertSame($mock, $repo->create(['foo' => 'bar']));
 	}
 
-	/**
-	 * @expectedException RuntimeException
-	 */
-	public function testUpdateWhenNotExists()
+	/** @test */
+	public function updateWhenNotExists()
 	{
+		$this->setExpectedException('RuntimeException');
 		list($model, $validator, $repo) = $this->make();
 		$updateModel = new RepoTestModelStub;
 		$updateModel->exists = false;
@@ -119,7 +127,8 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$repo->update($updateModel, []);
 	}
 
-	public function testUpdateValidationFails()
+	/** @test */
+	public function updateValidationFails()
 	{
 		list($model, $validator, $repo) = $this->make();
 		$updateModel = new RepoTestModelStub;
@@ -132,7 +141,8 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertFalse($repo->update($updateModel, []));
 	}
 
-	public function testUpdate()
+	/** @test */
+	public function update()
 	{
 		list($model, $validator, $repo) = $this->make();
 		$updateModel = $this->makeMockModel()->makePartial();
@@ -146,7 +156,8 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue($repo->update($updateModel, ['foo' => 'bar']));
 	}
 
-	public function testDelete()
+	/** @test */
+	public function delete()
 	{
 		list($model, $validator, $repo) = $this->make();
 		$model = $this->makeMockModel();

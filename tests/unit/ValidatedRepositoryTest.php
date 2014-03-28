@@ -6,7 +6,8 @@ use Mockery as m;
 
 class ValidatedRepositoryTest extends PHPUnit_Framework_TestCase
 {
-	public function testErrorsAreAddedAndCanBeRetrieved()
+	/** @test */
+	public function errorsAreAddedAndCanBeRetrieved()
 	{
 		$model = m::mock('Illuminate\Database\Eloquent\Model');
 		$model->shouldReceive('getTable')->once()->andReturn('table');

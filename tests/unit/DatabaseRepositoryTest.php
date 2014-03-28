@@ -12,7 +12,8 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 		m::close();
 	}
 
-	public function testGetAll()
+	/** @test */
+	public function getAll()
 	{
 		$db = $this->mockConnection();
 		$repo = new DBRepoStub($db);
@@ -24,7 +25,8 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('foo', $repo->getAll());
 	}
 
-	public function testGetSingle()
+	/** @test */
+	public function getSingle()
 	{
 		$db = $this->mockConnection();
 		$repo = new DBRepoStub($db);
@@ -38,7 +40,8 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('foo', $repo->getByKey(1));
 	}
 
-	public function testCreate()
+	/** @test */
+	public function create()
 	{
 		$data = ['foo' => 'bar'];
 		$db = $this->mockConnection();
@@ -52,7 +55,8 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('bar', $result->foo);
 	}
 
-	public function testCreateFailure()
+	/** @test */
+	public function createFailure()
 	{
 		$data = ['foo' => 'bar'];
 		$db = $this->mockConnection();
@@ -65,7 +69,8 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertFalse($repo->create($data));
 	}
 
-	public function testUpdate()
+	/** @test */
+	public function update()
 	{
 		$model = $this->makeModel(['id' => 1]);
 		$data = ['foo' => 'bar'];
@@ -81,7 +86,8 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue($repo->update($model, $data));
 	}
 
-	public function testUpdateFailure()
+	/** @test */
+	public function updateFailure()
 	{
 		$model = $this->makeModel(['id' => 1]);
 		$data = ['foo' => 'bar'];
@@ -97,7 +103,8 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertFalse($repo->update($model, $data));
 	}
 
-	public function testDelete()
+	/** @test */
+	public function delete()
 	{
 		$model = $this->makeModel(['id' => 1]);
 		$db = $this->mockConnection();
@@ -112,12 +119,10 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue($repo->delete($model));
 	}
 
-	/**
-	 * @test
-	 * @expectedException anlutro\LaravelRepository\NotFoundException
-	 */
+	/** @test */
 	public function throwExceptionsOnFailedFind()
 	{
+		$this->setExpectedException('anlutro\LaravelRepository\NotFoundException');
 		$db = $this->mockConnection();
 		$repo = new DBRepoStub($db);
 		$repo->toggleExceptions(true);
