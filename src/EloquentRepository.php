@@ -68,7 +68,7 @@ abstract class EloquentRepository extends AbstractRepository
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getConnection()
+	protected function getConnection()
 	{
 		return $this->model->getConnection();
 	}
@@ -100,7 +100,7 @@ abstract class EloquentRepository extends AbstractRepository
 	 *
 	 * @return  \Illuminate\Database\Eloquent\Model
 	 */
-	public function performCreate($model, array $attributes)
+	protected function performCreate($model, array $attributes)
 	{
 		$model->fill($attributes);
 		return $this->perform('save', $model, $attributes, false);
@@ -109,7 +109,7 @@ abstract class EloquentRepository extends AbstractRepository
 	/**
 	 * {@inheritdoc}
 	 */
-	public function performUpdate($model, array $attributes)
+	protected function performUpdate($model, array $attributes)
 	{
 		$model->fill($attributes);
 		return $this->perform('save', $model, $attributes, false);
@@ -118,7 +118,7 @@ abstract class EloquentRepository extends AbstractRepository
 	/**
 	 * {@inheritdoc}
 	 */
-	public function performSave($model, array $attributes)
+	protected function performSave($model, array $attributes)
 	{
 		$method = $this->push ? 'push' : 'save';
 		return $model->$method() ? $model : false;
@@ -127,7 +127,7 @@ abstract class EloquentRepository extends AbstractRepository
 	/**
 	 * {@inheritdoc}
 	 */
-	public function performDelete($model)
+	protected function performDelete($model)
 	{
 		return $model->delete();
 	}
@@ -137,7 +137,7 @@ abstract class EloquentRepository extends AbstractRepository
 	 *
 	 * @return \Illuminate\Database\Eloquent\Builder
 	 */
-	public function newQuery()
+	protected function newQuery()
 	{
 		return $this->model->newQuery();
 	}
@@ -145,7 +145,7 @@ abstract class EloquentRepository extends AbstractRepository
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getKeyName()
+	protected function getKeyName()
 	{
 		return $this->model->getQualifiedKeyName();
 	}
@@ -153,7 +153,7 @@ abstract class EloquentRepository extends AbstractRepository
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getEntityKey($model)
+	protected function getEntityKey($model)
 	{
 		return $model->getKey();
 	}

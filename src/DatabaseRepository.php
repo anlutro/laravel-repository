@@ -100,7 +100,7 @@ abstract class DatabaseRepository extends AbstractRepository
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getKeyName()
+	protected function getKeyName()
 	{
 		return "{$this->table}.{$this->primaryKey}";
 	}
@@ -120,7 +120,7 @@ abstract class DatabaseRepository extends AbstractRepository
 	 *
 	 * @return  \Illuminate\Support\Fluent|false
 	 */
-	public function performCreate($model, array $attributes = array())
+	protected function performCreate($model, array $attributes = array())
 	{
 		foreach ($attributes as $key => $value) {
 			$model->$key = $value;
@@ -135,7 +135,7 @@ abstract class DatabaseRepository extends AbstractRepository
 	/**
 	 * {@inheritdoc}
 	 */
-	public function performUpdate($model, array $attributes)
+	protected function performUpdate($model, array $attributes)
 	{
 		foreach ($attributes as $key => $value) {
 			$model->$key = $value;
@@ -151,7 +151,7 @@ abstract class DatabaseRepository extends AbstractRepository
 	/**
 	 * {@inheritdoc}
 	 */
-	public function performDelete($model)
+	protected function performDelete($model)
 	{
 		return $this->newQuery()
 			->where($this->getKeyName(), '=', $model->{$this->primaryKey})
@@ -173,7 +173,7 @@ abstract class DatabaseRepository extends AbstractRepository
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getEntityKey($model)
+	protected function getEntityKey($model)
 	{
 		return $model->{$this->primaryKey};
 	}

@@ -18,11 +18,34 @@ use anlutro\LaravelValidation\Validator;
  */
 abstract class AbstractRepository
 {
+	/**
+	 * Whether or not to throw exceptions or return null when "find" methods do
+	 * not yield any results.
+	 *
+	 * @var boolean
+	 */
 	protected $throwExceptions = false;
+
+	/**
+	 * Whether or not to paginate results.
+	 *
+	 * @var boolean
+	 */
 	protected $paginate = false;
+
+	/**
+	 * @var \anlutro\LaravelValidation\Validator
+	 */
 	protected $validator;
+
+	/**
+	 * @var \Illuminate\Support\MessageBag
+	 */
 	protected $errors;
 
+	/**
+	 * @param \anlutro\LaravelValidation\Validator $validator Optional
+	 */
 	public function __construct(Validator $validator = null)
 	{
 		$this->resetErrors();
@@ -165,7 +188,7 @@ abstract class AbstractRepository
 	/**
 	 * Get the repository's validator.
 	 *
-	 * @return \c\Validator
+	 * @return \anlutro\LaravelValidation\Validator
 	 */
 	public function getValidator()
 	{
@@ -207,6 +230,8 @@ abstract class AbstractRepository
 	 * Do a before action.
 	 *
 	 * @see  doBeforeOrAfter
+	 *
+	 * @return mixed
 	 */
 	protected function doBefore($action, $object, $attributes)
 	{
@@ -217,6 +242,8 @@ abstract class AbstractRepository
 	 * Do an after action.
 	 *
 	 * @see  doBeforeOrAfter
+	 *
+	 * @return mixed
 	 */
 	protected function doAfter($action, $result, $attributes)
 	{
@@ -304,6 +331,32 @@ abstract class AbstractRepository
 	}
 
 	/**
+	 * Get a specific row by key in the repository.
+	 *
+	 * @param  mixed $key
+	 *
+	 * @return mixed
+	 */
+	public function findByKey($key)
+	{
+		$query = $this->newQuery()
+			->where($this->getKeyName(), '=', $key);
+		return $this->fetchSingle($query);
+	}
+
+	/**
+	 * Get a specific row by attributes in the repository.
+	 *
+	 * @param  array $attributes
+	 *
+	 * @return mixed
+	 */
+	public function findByAttributes(array $attributes)
+	{
+		return $this->fetchSingle($this->newAttributesQuery($attributes));
+	}
+
+	/**
 	 * Get all the entities for the repository.
 	 *
 	 * @return mixed
@@ -315,21 +368,29 @@ abstract class AbstractRepository
 	}
 
 	/**
-	 * Get a specific row by key in the repository.
-	 *
-	 * @param  mixed $key
-	 *
-	 * @return mixed
+	 * @deprecated  Use findByKey()
 	 */
 	public function getByKey($key)
 	{
-		$query = $this->newQuery()
-			->where($this->getKeyName(), '=', $key);
-		return $this->fetchSingle($query);
+		return $this->findByKey($key);
+	}
+
+	/**
+	 * Get a specific row by attributes in the repository.
+	 *
+	 * @param  array $attributes
+	 *
+	 * @return mixed
+	 */
+	public function getByAttributes(array $attributes)
+	{
+		return $this->fetchMany($this->newAttributesQuery($attributes));
 	}
 
 	/**
 	 * Get a list of columns from the repository.
+	 *
+	 * @see    \Illuminate\Database\Query::lists()
 	 *
 	 * @param  string $column
 	 * @param  string $key    Column to be used as the array keys
@@ -356,6 +417,25 @@ abstract class AbstractRepository
 	}
 
 	/**
+	 * Get a new query that searches by attributes.
+	 *
+	 * @param  array  $attributes
+	 * @param  string $operator   Default: '='
+	 *
+	 * @return mixed
+	 */
+	protected function newAttributesQuery(array $attributes, $operator = '=')
+	{
+		$query = $this->newQuery();
+
+		foreach ($attributes as $key => $value) {
+			$query->where($key, $operator, $value);
+		}
+
+		return $query;
+	}
+
+	/**
 	 * Get the connection the repository uses.
 	 *
 	 * @return \Illuminate\Database\Connection
@@ -364,6 +444,8 @@ abstract class AbstractRepository
 
 	/**
 	 * Get a new query builder instance.
+	 *
+	 * @return mixed
 	 */
 	protected abstract function newQuery();
 
@@ -371,6 +453,8 @@ abstract class AbstractRepository
 	 * Get a new entity instance.
 	 *
 	 * @param  array  $attributes
+	 *
+	 * @return mixed
 	 */
 	protected abstract function getNew(array $attributes = array());
 
@@ -379,6 +463,8 @@ abstract class AbstractRepository
 	 *
 	 * @param  mixed  $entity
 	 * @param  array  $attributes
+	 *
+	 * @return mixed
 	 */
 	protected abstract function performCreate($entity, array $attributes);
 
