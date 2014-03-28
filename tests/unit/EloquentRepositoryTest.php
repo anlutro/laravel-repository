@@ -1,5 +1,8 @@
 <?php
+namespace anlutro\LaravelRepository\Tests;
+
 use Mockery as m;
+use PHPUnit_Framework_TestCase;
 
 class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 {
@@ -40,7 +43,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 
 	public function testQueryBefore()
 	{
-		list($model, $validator, $repo) = $this->make('RepoWithBefores');
+		list($model, $validator, $repo) = $this->make(__NAMESPACE__.'\RepoWithBefores');
 		$query = $this->makeMockQuery();
 		$model->shouldReceive('newQuery')->once()->andReturn($query);
 		$query->shouldReceive('prepareQuery')->once();
@@ -51,7 +54,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 
 	public function testQueryAfter()
 	{
-		list($model, $validator, $repo) = $this->make('RepoWithAfters');
+		list($model, $validator, $repo) = $this->make(__NAMESPACE__.'\RepoWithAfters');
 		$query = $this->makeMockQuery();
 		$result = m::mock();
 		$model->shouldReceive('newQuery')->once()->andReturn($query);
@@ -73,7 +76,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 
 	public function testFetchSinglePrepare()
 	{
-		list($model, $validator, $repo) = $this->make('RepoWithAfters');
+		list($model, $validator, $repo) = $this->make(__NAMESPACE__.'\RepoWithAfters');
 		$query = $this->makeMockQuery();
 		$result = m::mock();
 		$model->shouldReceive('newQuery->where')->once()->andReturn($query);
@@ -85,7 +88,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 
 	public function testInvalidCreate()
 	{
-		list($model, $validator, $repo) = $this->make('RepoWithBefores');
+		list($model, $validator, $repo) = $this->make(__NAMESPACE__.'\RepoWithBefores');
 		$mockModel = $this->makeMockModel();
 		$model->shouldReceive('newInstance')->once()->with([])->andReturn($mockModel);
 		$validator->shouldReceive('validCreate')->once()->with([])->andReturn(false);
@@ -152,8 +155,9 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue($repo->delete($model));
 	}
 
-	protected function make($class = 'RepoStub')
+	protected function make($class = null)
 	{
+		if (!$class) $class = __NAMESPACE__ . '\RepoStub';
 		return [
 			$m = $this->makeMockModel(),
 			$v = $this->makeMockValidator(),
@@ -161,8 +165,9 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		];
 	}
 
-	protected function makeRepo($model, $validator, $class = 'RepoStub')
+	protected function makeRepo($model, $validator, $class = null)
 	{
+		if (!$class) $class = __NAMESPACE__ . '\RepoStub';
 		return new $class($model, $validator);
 	}
 
@@ -225,7 +230,7 @@ class RepoWithAfters extends \anlutro\LaravelRepository\EloquentRepository
 	}
 }
 
-class RepoTestModelStub extends Illuminate\Database\Eloquent\Model
+class RepoTestModelStub extends \Illuminate\Database\Eloquent\Model
 {
 
 }

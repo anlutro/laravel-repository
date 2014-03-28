@@ -1,5 +1,7 @@
 <?php
+namespace anlutro\LaravelRepository\Tests;
 
+use PHPUnit_Framework_TestCase;
 use Mockery as m;
 
 class ValidatedRepositoryTest extends PHPUnit_Framework_TestCase
@@ -14,7 +16,7 @@ class ValidatedRepositoryTest extends PHPUnit_Framework_TestCase
 
 		$model->shouldReceive('newInstance->fill->save')->once()->andReturn(true);
 		$validator->shouldReceive('validCreate')->andReturn(false);
-		$validator->shouldReceive('errors')->andReturn(new Illuminate\Support\MessageBag(['error' => ['message']]));
+		$validator->shouldReceive('errors')->andReturn(new \Illuminate\Support\MessageBag(['error' => ['message']]));
 		$repo->create(['foo' => 'bar']);
 		$errors = $repo->getErrors();
 		$this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);

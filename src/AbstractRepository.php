@@ -145,7 +145,7 @@ abstract class AbstractRepository
 			$result = $query->first();
 
 			if (!$result && $this->throwExceptions === true) {
-				throw new \c\NotFoundException;
+				throw new NotFoundException;
 			}
 
 			return $result;

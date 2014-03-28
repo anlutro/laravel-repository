@@ -1,7 +1,9 @@
 <?php
-use Mockery as m;
+namespace anlutro\LaravelRepository\Tests;
 
 use Illuminate\Support\Fluent;
+use Mockery as m;
+use PHPUnit_Framework_TestCase;
 
 class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 {
