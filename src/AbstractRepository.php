@@ -212,15 +212,17 @@ abstract class AbstractRepository
 	 * Toggle throwing of exceptions.
 	 *
 	 * @param  boolean $toggle
+	 * @param  boolean $toggleValidator Whether or not to toggle exceptions on
+	 * the validator as well as the repository. Defaults to true
 	 *
 	 * @return static
 	 */
-	public function toggleExceptions($toggle)
+	public function toggleExceptions($toggle, $toggleValidator = true)
 	{
 		$this->throwExceptions = (bool) $toggle;
 
-		if ($this->validator) {
-			$this->validator->toggleExceptions(true);
+		if ($this->validator && $toggleValidator) {
+			$this->validator->toggleExceptions((bool) $toggle);
 		}
 
 		return $this;
