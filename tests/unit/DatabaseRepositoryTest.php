@@ -112,6 +112,23 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue($repo->delete($model));
 	}
 
+	/**
+	 * @test
+	 * @expectedException anlutro\LaravelRepository\NotFoundException
+	 */
+	public function throwExceptionsOnFailedFind()
+	{
+		$db = $this->mockConnection();
+		$repo = new DBRepoStub($db);
+		$repo->toggleExceptions(true);
+		$query = $this->mockQuery();
+		$db->shouldReceive('table')->with('table')->andReturn($query);
+		$query->shouldReceive('where')->with('table.id', '=', 1)->once()
+			->andReturn(m::self())->getMock()->shouldReceive('first')
+			->once()->andReturn(null);
+		$repo->findByKey(1);
+	}
+
 	public function makeModel(array $attributes)
 	{
 		return new Fluent($attributes);
