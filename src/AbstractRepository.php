@@ -231,7 +231,7 @@ abstract class AbstractRepository
 	/**
 	 * Do a before action.
 	 *
-	 * @see  doBeforeOrAfter
+	 * @see   doBeforeOrAfter
 	 *
 	 * @return mixed
 	 */
@@ -243,7 +243,7 @@ abstract class AbstractRepository
 	/**
 	 * Do an after action.
 	 *
-	 * @see  doBeforeOrAfter
+	 * @see   doBeforeOrAfter
 	 *
 	 * @return mixed
 	 */
@@ -257,7 +257,7 @@ abstract class AbstractRepository
 	 *
 	 * @param  array  $attributes
 	 *
-	 * @return mixed
+	 * @return object|false
 	 */
 	public function create(array $attributes)
 	{
@@ -267,8 +267,8 @@ abstract class AbstractRepository
 	/**
 	 * Update an entity with the given attributes and persist it.
 	 *
-	 * @param  mixed  $entity
-	 * @param  array  $attributes
+	 * @param  object  $entity
+	 * @param  array   $attributes
 	 *
 	 * @return boolean
 	 */
@@ -284,7 +284,7 @@ abstract class AbstractRepository
 	/**
 	 * Delete an entity.
 	 *
-	 * @param  mixed $entity
+	 * @param  object  $entity
 	 *
 	 * @return boolean
 	 */
@@ -296,7 +296,7 @@ abstract class AbstractRepository
 	/**
 	 * Perform a query, fetching multiple rows.
 	 *
-	 * @param  mixed  $query
+	 * @param  \Illuminate\Database\Query\Builder  $query
 	 *
 	 * @return mixed
 	 */
@@ -308,7 +308,7 @@ abstract class AbstractRepository
 	/**
 	 * Perform a query, fetching a single row.
 	 *
-	 * @param  mixed  $query
+	 * @param  \Illuminate\Database\Query\Builder  $query
 	 *
 	 * @return mixed
 	 */
@@ -320,7 +320,7 @@ abstract class AbstractRepository
 	/**
 	 * Perform a query, fetching an array of columns.
 	 *
-	 * @param  mixed  $query
+	 * @param  \Illuminate\Database\Query\Builder  $query
 	 * @param  string $column
 	 * @param  string $key    Column to be used as the array keys
 	 *
@@ -361,7 +361,7 @@ abstract class AbstractRepository
 	/**
 	 * Get all the entities for the repository.
 	 *
-	 * @return mixed
+	 * @return object[]
 	 */
 	public function getAll()
 	{
@@ -413,7 +413,7 @@ abstract class AbstractRepository
 	 *
 	 * @return mixed
 	 */
-	public function transaction(Closure $closure)
+	protected function transaction(Closure $closure)
 	{
 		return $this->getConnection()->transaction($closure);
 	}
@@ -447,7 +447,7 @@ abstract class AbstractRepository
 	/**
 	 * Get a new query builder instance.
 	 *
-	 * @return mixed
+	 * @return \Illuminate\Database\Query\Builder
 	 */
 	protected abstract function newQuery();
 
@@ -456,25 +456,25 @@ abstract class AbstractRepository
 	 *
 	 * @param  array  $attributes
 	 *
-	 * @return mixed
+	 * @return object
 	 */
-	protected abstract function getNew(array $attributes = array());
+	public abstract function getNew(array $attributes = array());
 
 	/**
 	 * Perform a create action.
 	 *
-	 * @param  mixed  $entity
-	 * @param  array  $attributes
+	 * @param  object  $entity
+	 * @param  array   $attributes
 	 *
-	 * @return mixed
+	 * @return object|false
 	 */
 	protected abstract function performCreate($entity, array $attributes);
 
 	/**
 	 * Perform an update action.
 	 *
-	 * @param  mixed  $entity
-	 * @param  array  $attributes
+	 * @param  object  $entity
+	 * @param  array   $attributes
 	 *
 	 * @return boolean
 	 */
@@ -483,7 +483,7 @@ abstract class AbstractRepository
 	/**
 	 * Perform a delete action.
 	 *
-	 * @param  mixed $entity
+	 * @param  object  $entity
 	 *
 	 * @return boolean
 	 */
@@ -499,7 +499,7 @@ abstract class AbstractRepository
 	/**
 	 * Get the primary key of an entity.
 	 *
-	 * @param  mixed $entity
+	 * @param  object  $entity
 	 *
 	 * @return mixed
 	 */
