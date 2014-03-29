@@ -1,4 +1,4 @@
-# Laravel 4 Repository classes [![Build Status](https://travis-ci.org/anlutro/laravel-repository.png?branch=master)](https://travis-ci.org/anlutro/laravel-repository)
+# Laravel 4 Repositories [![Build Status](https://travis-ci.org/anlutro/laravel-repository.png?branch=master)](https://travis-ci.org/anlutro/laravel-repository) [![Latest Version](http://img.shields.io/github/tag/anlutro/laravel-repository.svg)](https://github.com/anlutro/laravel-repository/releases)
 Installation: `composer require anlutro/l4-repository`
 
 Pick the latest stable version from packagist or the GitHub tag list. If you use dev-master you WILL get breaking and experimental changes.
