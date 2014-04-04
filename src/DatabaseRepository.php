@@ -162,8 +162,6 @@ abstract class DatabaseRepository extends AbstractRepository
 
 	/**
 	 * {@inheritdoc}
-	 *
-	 * @return  \Illuminate\Database\Query\Builder
 	 */
 	protected function newQuery()
 	{
