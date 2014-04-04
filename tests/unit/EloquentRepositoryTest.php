@@ -50,7 +50,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		list($model, $validator, $repo) = $this->make(__NAMESPACE__.'\RepoWithBefores');
 		$query = $this->makeMockQuery();
 		$model->shouldReceive('newQuery')->once()->andReturn($query);
-		$query->shouldReceive('prepareQuery')->once();
+		$query->shouldReceive('doBeforeQueryStuff')->once();
 		$query->shouldReceive('get')->once()->andReturn('foo');
 
 		$this->assertEquals('foo', $repo->getAll());
@@ -63,7 +63,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$query = $this->makeMockQuery();
 		$model->shouldReceive('newQuery')->once()->andReturn($query);
 		$query->shouldReceive('where')->with(m::any(),'=',10)->once()->andReturn(m::self());
-		$query->shouldReceive('prepareQuery')->once();
+		$query->shouldReceive('doBeforeQueryStuff')->once();
 		$query->shouldReceive('first')->once()->andReturn('foo');
 
 		$this->assertEquals('foo', $repo->getByKey(10));
@@ -222,7 +222,7 @@ class RepoWithBefores extends \anlutro\LaravelRepository\EloquentRepository
 {
 	protected function beforeQuery($query, $many)
 	{
-		$query->prepareQuery();
+		$query->doBeforeQueryStuff();
 	}
 
 	public function beforeCreate($model, $attributes)
