@@ -57,6 +57,19 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 	}
 
 	/** @test */
+	public function findBefore()
+	{
+		list($model, $validator, $repo) = $this->make(__NAMESPACE__.'\RepoWithBefores');
+		$query = $this->makeMockQuery();
+		$model->shouldReceive('newQuery')->once()->andReturn($query);
+		$query->shouldReceive('where')->with(m::any(),'=',10)->once()->andReturn(m::self());
+		$query->shouldReceive('prepareQuery')->once();
+		$query->shouldReceive('first')->once()->andReturn('foo');
+
+		$this->assertEquals('foo', $repo->getByKey(10));
+	}
+
+	/** @test */
 	public function queryAfter()
 	{
 		list($model, $validator, $repo) = $this->make(__NAMESPACE__.'\RepoWithAfters');
