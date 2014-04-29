@@ -14,7 +14,7 @@
 		"anlutro/l4-validation": "0.5.*"
 	},
 	"require-dev": {
-		"mockery/mockery": "dev-master",
+		"mockery/mockery": "0.9.*",
 		"anlutro/l4-testing": "0.2.*"
 	},
 	"autoload": {
