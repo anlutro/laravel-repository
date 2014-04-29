@@ -13,7 +13,10 @@ A repository is a class that lies somewhere between the controller and the datab
 The repository comes with some standard methods already, like getByKey and getAll. You may add as many custom methods you want to the repository. The public methods available by default are:
 
 - getAll()
-- getByKey($key)
+- findByKey($key)
+- getByAttributes(array $attributes) - find all rows that matches a set of attributes
+- getList($column = 'id', $key = null) - get an array of attributes, similar to Query::lists() in Laravel
+- findByAttributes(array $attributes) - find the first row that matches a set of attributes
 - getNew($attributes) - no validation, simply a new entity
 - create($attributes) - validate and attempt to create a new entity
 - update($entity, $attributes) - validate and attempt to update an existing entity
