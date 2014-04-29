@@ -6,23 +6,47 @@ use Mockery as m;
 
 class ValidatedRepositoryTest extends PHPUnit_Framework_TestCase
 {
-	/** @test */
-	public function errorsAreAddedAndCanBeRetrieved()
+	protected function getRepo($class = null)
 	{
+		if (!$class) $class = 'ValidatedRepositoryStub';
+		$class = __NAMESPACE__ . '\\' . $class;
 		$model = m::mock('Illuminate\Database\Eloquent\Model');
 		$model->shouldReceive('getTable')->once()->andReturn('table');
 		$validator = m::mock('anlutro\LaravelValidation\Validator');
 		$validator->shouldReceive('replace')->once()->with('table', 'table');
-		$repo = new ValidatedRepositoryStub($model, $validator);
+		return new $class($model, $validator);
+	}
 
-		$model->shouldReceive('newInstance->fill->save')->once()->andReturn(true);
-		$validator->shouldReceive('validCreate')->andReturn(false);
-		$validator->shouldReceive('errors')->andReturn(new \Illuminate\Support\MessageBag(['error' => ['message']]));
+	/** @test */
+	public function errorsAreAddedAndCanBeRetrieved()
+	{
+		$repo = $this->getRepo();
+		$repo->getModel()->shouldReceive('newInstance->fill->save')->once()->andReturn(true);
+		$repo->getValidator()->shouldReceive('validCreate')->once()->with(['foo' => 'bar'])->andReturn(false);
+		$repo->getValidator()->shouldReceive('errors')->once()->andReturn(new \Illuminate\Support\MessageBag(['error' => ['message']]));
 		$repo->create(['foo' => 'bar']);
 		$errors = $repo->getErrors();
 		$this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
 		$this->assertEquals(['error' => ['message']], $errors->getMessages());
 	}
+
+	/** @test */
+	public function modelIsValidated()
+	{
+		$repo = $this->getRepo('ModelValidatedRepositoryStub');
+		$model = m::mock('Illuminate\Database\Eloquent\Model');
+		$model->exists = true;
+		$model->shouldReceive('getKey')->once()->andReturn('1');
+		$model->shouldReceive('getAttributes')->once()->andReturn(['raw_foo' => 'raw_bar']);
+		$repo->getValidator()->shouldReceive('replace')->once()->with('key', '1')->andReturn(false);
+		$repo->getValidator()->shouldReceive('validUpdate')->once()->with(['raw_foo' => 'raw_bar'])->andReturn(false);
+		$repo->getValidator()->shouldReceive('errors')->once()->andReturn([]);
+		$this->assertFalse($repo->update($model, ['foo' => 'bar']));
+	}
 }
 
 class ValidatedRepositoryStub extends \anlutro\LaravelRepository\EloquentRepository {}
+class ModelValidatedRepositoryStub extends \anlutro\LaravelRepository\EloquentRepository
+{
+	protected $validateEntity = true;
+}

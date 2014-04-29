@@ -66,7 +66,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$query->shouldReceive('doBeforeQueryStuff')->once();
 		$query->shouldReceive('first')->once()->andReturn('foo');
 
-		$this->assertEquals('foo', $repo->getByKey(10));
+		$this->assertEquals('foo', $repo->findByKey(10));
 	}
 
 	/** @test */
@@ -83,14 +83,14 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 	}
 
 	/** @test */
-	public function getByKey()
+	public function findByKey()
 	{
 		list($model, $validator, $repo) = $this->make();
 		$query = $this->makeMockQuery();
 		$model->shouldReceive('newQuery')->once()->andReturn($query);
 		$query->shouldReceive('where->first')->once()->andReturn('foo');
 
-		$this->assertEquals('foo', $repo->getByKey(1));
+		$this->assertEquals('foo', $repo->findByKey(1));
 	}
 
 	/** @test */
@@ -103,7 +103,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$query->shouldReceive('first')->once()->andReturn($result);
 		$result->shouldReceive('prepareResults')->once();
 
-		$this->assertSame($result, $repo->getByKey(1));
+		$this->assertSame($result, $repo->findByKey(1));
 	}
 
 	/** @test */
@@ -113,7 +113,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$mockModel = $this->makeMockModel();
 		$model->shouldReceive('newInstance')->once()->with([])->andReturn($mockModel);
 		$validator->shouldReceive('validCreate')->once()->with([])->andReturn(false);
-		$validator->shouldReceive('errors->getMessages')->once()->andReturn([]);
+		$validator->shouldReceive('errors')->once()->andReturn([]);
 
 		$this->assertFalse($repo->create([]));
 	}
@@ -149,7 +149,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$updateModel->exists = true;
 		$validator->shouldReceive('replace')->once()->with('key', 'foo');
 		$validator->shouldReceive('validUpdate')->once()->andReturn(false);
-		$validator->shouldReceive('errors->getMessages')->once()->andReturn([]);
+		$validator->shouldReceive('errors')->once()->andReturn([]);
 
 		$this->assertFalse($repo->update($updateModel, []));
 	}

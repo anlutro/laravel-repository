@@ -37,7 +37,7 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 			->andReturn(m::self())->getMock()->shouldReceive('first')
 			->andReturn('foo');
 
-		$this->assertEquals('foo', $repo->getByKey(1));
+		$this->assertEquals('foo', $repo->findByKey(1));
 	}
 
 	/** @test */

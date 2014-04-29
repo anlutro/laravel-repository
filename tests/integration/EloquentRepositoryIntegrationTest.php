@@ -1,21 +1,26 @@
 <?php
+namespace anlutro\LaravelRepository\Tests;
 
 class EloquentRepositoryIntegrationTest extends \anlutro\LaravelTesting\EloquentTestCase
 {
-	public function testCreate()
+	/**
+	 * @test
+	 */
+	public function create()
 	{
 		$repo = $this->makeRepo();
 		$model = $repo->create(['name' => 'foo', 'bool' => true]);
-		$this->assertInstanceOf('ERIT_TestModel', $model);
+		$this->assertInstanceOf(__NAMESPACE__.'\ERIT_TestModel', $model);
 		$this->assertEquals('foo', $model->name);
 		$this->assertEquals(false, $model->bool);
 		$this->assertTrue($model->exists);
 	}
 
 	/**
-	 * @depends testCreate
+	 * @test
+	 * @depends create
 	 */
-	public function testGetAll()
+	public function getAll()
 	{
 		$repo = $this->makeRepo(); $model = $repo->create(['name' => 'foo']);
 		$results = $repo->getAll();
@@ -24,19 +29,21 @@ class EloquentRepositoryIntegrationTest extends \anlutro\LaravelTesting\Eloquent
 	}
 
 	/**
-	 * @depends testCreate
+	 * @test
+	 * @depends create
 	 */
-	public function testGetByKey()
+	public function findByKey()
 	{
 		$repo = $this->makeRepo(); $model = $repo->create(['name' => 'foo']);
-		$result = $repo->getByKey($model->getKey());
+		$result = $repo->findByKey($model->getKey());
 		$this->assertEquals('foo', $result->name);
 	}
 
 	/**
-	 * @depends testCreate
+	 * @test
+	 * @depends create
 	 */
-	public function testUpdate()
+	public function update()
 	{
 		$repo = $this->makeRepo(); $model = $repo->create(['name' => 'foo']);
 		$repo->update($model, ['name' => 'bar']);
@@ -44,10 +51,11 @@ class EloquentRepositoryIntegrationTest extends \anlutro\LaravelTesting\Eloquent
 	}
 
 	/**
-	 * @depends testCreate
-	 * @depends testGetAll
+	 * @test
+	 * @depends create
+	 * @depends getAll
 	 */
-	public function testDelete()
+	public function delete()
 	{
 		$repo = $this->makeRepo(); $model = $repo->create(['name' => 'foo']);
 		$this->assertTrue($repo->delete($model));
@@ -56,28 +64,30 @@ class EloquentRepositoryIntegrationTest extends \anlutro\LaravelTesting\Eloquent
 	}
 
 	/**
-	 * @depends testCreate
+	 * @test
+	 * @depends create
 	 */
-	public function testCustomActions()
+	public function customActions()
 	{
 		$repo = $this->makeRepo();
 		$model = $repo->createAsAdmin(['name' => 'foo', 'bool' => true]);
-		$this->assertInstanceOf('ERIT_TestModel', $model);
+		$this->assertInstanceOf(__NAMESPACE__.'\ERIT_TestModel', $model);
 		$this->assertEquals('foo', $model->name);
 		$this->assertEquals(true, $model->bool);
 		$this->assertTrue($model->exists);
 
 		$repo->updateAsAdmin($model, ['bool' => false]);
-		$this->assertInstanceOf('ERIT_TestModel', $model);
+		$this->assertInstanceOf(__NAMESPACE__.'\ERIT_TestModel', $model);
 		$this->assertEquals('foo', $model->name);
 		$this->assertEquals(false, $model->bool);
 		$this->assertTrue($model->exists);
 	}
 
 	/**
-	 * @depends testCreate
+	 * @test
+	 * @depends create
 	 */
-	public function testAdvancedCustomAction()
+	public function advancedCustomAction()
 	{
 		$repo = $this->makeRepo(); $model = $repo->createAsAdmin(['name' => 'foo', 'bool' => true]);
 		$repo->toggle($model);
@@ -93,7 +103,7 @@ class EloquentRepositoryIntegrationTest extends \anlutro\LaravelTesting\Eloquent
 
 	protected function getMigrations()
 	{
-		return ['ERIT_TestMigration'];
+		return [__NAMESPACE__.'\ERIT_TestMigration'];
 	}
 }
 
@@ -101,7 +111,7 @@ class ERIT_TestMigration extends \Illuminate\Database\Migrations\Migration
 {
 	public function up()
 	{
-		Illuminate\Support\Facades\Schema::create('test_table', function($t) {
+		\Illuminate\Support\Facades\Schema::create('test_table', function($t) {
 			$t->increments('id');
 			$t->string('name');
 			$t->boolean('bool')->default(false);
@@ -110,7 +120,7 @@ class ERIT_TestMigration extends \Illuminate\Database\Migrations\Migration
 
 	public function down()
 	{
-		Illuminate\Support\Facades\Schema::drop('test_table');
+		\Illuminate\Support\Facades\Schema::drop('test_table');
 	}
 }
 

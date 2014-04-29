@@ -157,4 +157,12 @@ abstract class EloquentRepository extends AbstractRepository
 	{
 		return $model->getKey();
 	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	protected function getEntityAttributes($model)
+	{
+		return $model->getAttributes();
+	}
 }

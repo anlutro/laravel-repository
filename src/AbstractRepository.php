@@ -39,6 +39,13 @@ abstract class AbstractRepository
 	protected $validator;
 
 	/**
+	 * Whether to validate the model or the input attributes.
+	 *
+	 * @var boolean
+	 */
+	protected $validateEntity = false;
+
+	/**
 	 * @var \Illuminate\Support\MessageBag
 	 */
 	protected $errors;
@@ -75,7 +82,11 @@ abstract class AbstractRepository
 		}
 
 		if ($validate === true) {
-			if (!$this->valid($action, $attributes)) return false;
+			if ($this->validateEntity) {
+				if (!$this->valid($action, $this->getEntityAttributes($object))) return false;
+			} else {
+				if (!$this->valid($action, $attributes)) return false;
+			}
 		}
 
 		$beforeResult = $this->doBefore($action, $object, $attributes);
@@ -125,7 +136,7 @@ abstract class AbstractRepository
 		$result = $this->validator->$method($attributes);
 
 		if ($result === false) {
-			$this->errors->merge($this->validator->errors()->getMessages());
+			$this->errors->merge($this->validator->errors());
 		}
 
 		return $result;
@@ -370,14 +381,6 @@ abstract class AbstractRepository
 	}
 
 	/**
-	 * @deprecated  Use findByKey()
-	 */
-	public function getByKey($key)
-	{
-		return $this->findByKey($key);
-	}
-
-	/**
 	 * Get a specific row by attributes in the repository.
 	 *
 	 * @param  array $attributes
@@ -504,4 +507,13 @@ abstract class AbstractRepository
 	 * @return mixed
 	 */
 	protected abstract function getEntityKey($entity);
+
+	/**
+	 * Get an entity's attributes.
+	 *
+	 * @param  object  $entity
+	 *
+	 * @return mixed
+	 */
+	protected abstract function getEntityAttributes($entity);
 }

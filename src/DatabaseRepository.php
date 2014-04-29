@@ -120,30 +120,30 @@ abstract class DatabaseRepository extends AbstractRepository
 	 *
 	 * @return  \Illuminate\Support\Fluent|false
 	 */
-	protected function performCreate($model, array $attributes = array())
+	protected function performCreate($entity, array $attributes = array())
 	{
 		foreach ($attributes as $key => $value) {
-			$model->$key = $value;
+			$entity->$key = $value;
 		}
 
 		$result = $this->newQuery()
-			->insert($model->toArray());
+			->insert($entity->toArray());
 
-		return $result ? $model : false;
+		return $result ? $entity : false;
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	protected function performUpdate($model, array $attributes)
+	protected function performUpdate($entity, array $attributes)
 	{
 		foreach ($attributes as $key => $value) {
-			$model->$key = $value;
+			$entity->$key = $value;
 		}
 
 		return $this->newQuery()
-			->where($this->getKeyName(), '=', $model->{$this->primaryKey})
-			->update($model->toArray());
+			->where($this->getKeyName(), '=', $entity->{$this->primaryKey})
+			->update($entity->toArray());
 
 		return $result;
 	}
@@ -151,10 +151,10 @@ abstract class DatabaseRepository extends AbstractRepository
 	/**
 	 * {@inheritdoc}
 	 */
-	protected function performDelete($model)
+	protected function performDelete($entity)
 	{
 		return $this->newQuery()
-			->where($this->getKeyName(), '=', $model->{$this->primaryKey})
+			->where($this->getKeyName(), '=', $entity->{$this->primaryKey})
 			->delete();
 
 		return (bool) $result;
@@ -171,8 +171,16 @@ abstract class DatabaseRepository extends AbstractRepository
 	/**
 	 * {@inheritdoc}
 	 */
-	protected function getEntityKey($model)
+	protected function getEntityKey($entity)
 	{
-		return $model->{$this->primaryKey};
+		return $entity->{$this->primaryKey};
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	protected function getEntityAttributes($entity)
+	{
+		return $entity->getAttributes();
 	}
 }
