@@ -156,14 +156,44 @@ abstract class AbstractRepository
 			$result = $query->first();
 
 			if (!$result && $this->throwExceptions === true) {
-				throw new NotFoundException;
+				throw $this->getNotFoundException($query);
 			}
 
 			return $result;
 		}
 
-		return $this->paginate === false ? $query->get()
-			: $query->paginate($this->paginate);
+		return $this->paginate === false ?
+			$this->getRegularQueryResults($query) :
+			$this->getPaginatedQueryResults($query);
+	}
+
+	protected function getNotFoundException($query)
+	{
+		return new NotFoundException();
+	}
+
+	/**
+	 * Get regular results from a query builder.
+	 *
+	 * @param  mixed $query
+	 *
+	 * @return mixed
+	 */
+	protected function getRegularQueryResults($query)
+	{
+		return $query->get();
+	}
+
+	/**
+	 * Get paginated results from a query.
+	 *
+	 * @param  mixed $query
+	 *
+	 * @return mixed
+	 */
+	protected function getPaginatedQueryResults($query)
+	{
+		return $query->paginate($this->paginate);
 	}
 
 	/**
