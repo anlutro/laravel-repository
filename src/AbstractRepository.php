@@ -153,7 +153,7 @@ abstract class AbstractRepository
 	protected function performQuery($query, $many)
 	{
 		if ($many === false) {
-			$result = $query->first();
+			$result = $this->getRegularQueryResults($query, false);
 
 			if (!$result && $this->throwExceptions === true) {
 				throw $this->getNotFoundException($query);
@@ -163,10 +163,17 @@ abstract class AbstractRepository
 		}
 
 		return $this->paginate === false ?
-			$this->getRegularQueryResults($query) :
+			$this->getRegularQueryResults($query, true) :
 			$this->getPaginatedQueryResults($query);
 	}
 
+	/**
+	 * Get a new "not found" exception.
+	 *
+	 * @param  mixed $query
+	 *
+	 * @return \Exception
+	 */
 	protected function getNotFoundException($query)
 	{
 		return new NotFoundException();
@@ -175,13 +182,14 @@ abstract class AbstractRepository
 	/**
 	 * Get regular results from a query builder.
 	 *
-	 * @param  mixed $query
+	 * @param  mixed   $query
+	 * @param  boolean $many
 	 *
 	 * @return mixed
 	 */
-	protected function getRegularQueryResults($query)
+	protected function getRegularQueryResults($query, $many)
 	{
-		return $query->get();
+		return $many ? $query->get() : $query->first();
 	}
 
 	/**
