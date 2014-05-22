@@ -136,7 +136,7 @@ abstract class AbstractRepository
 		$result = $this->validator->$method($attributes);
 
 		if ($result === false) {
-			$this->errors->merge($this->validator->errors());
+			$this->errors->merge($this->validator->getErrors());
 		}
 
 		return $result;

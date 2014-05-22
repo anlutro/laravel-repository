@@ -113,7 +113,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$mockModel = $this->makeMockModel();
 		$model->shouldReceive('newInstance')->once()->with([])->andReturn($mockModel);
 		$validator->shouldReceive('validCreate')->once()->with([])->andReturn(false);
-		$validator->shouldReceive('errors')->once()->andReturn([]);
+		$validator->shouldReceive('getErrors')->once()->andReturn([]);
 
 		$this->assertFalse($repo->create([]));
 	}
@@ -149,7 +149,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$updateModel->exists = true;
 		$validator->shouldReceive('replace')->once()->with('key', 'foo');
 		$validator->shouldReceive('validUpdate')->once()->andReturn(false);
-		$validator->shouldReceive('errors')->once()->andReturn([]);
+		$validator->shouldReceive('getErrors')->once()->andReturn([]);
 
 		$this->assertFalse($repo->update($updateModel, []));
 	}

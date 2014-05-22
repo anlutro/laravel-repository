@@ -23,7 +23,7 @@ class ValidatedRepositoryTest extends PHPUnit_Framework_TestCase
 		$repo = $this->getRepo();
 		$repo->getModel()->shouldReceive('newInstance->fill->save')->once()->andReturn(true);
 		$repo->getValidator()->shouldReceive('validCreate')->once()->with(['foo' => 'bar'])->andReturn(false);
-		$repo->getValidator()->shouldReceive('errors')->once()->andReturn(new \Illuminate\Support\MessageBag(['error' => ['message']]));
+		$repo->getValidator()->shouldReceive('getErrors')->once()->andReturn(new \Illuminate\Support\MessageBag(['error' => ['message']]));
 		$repo->create(['foo' => 'bar']);
 		$errors = $repo->getErrors();
 		$this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
@@ -40,7 +40,7 @@ class ValidatedRepositoryTest extends PHPUnit_Framework_TestCase
 		$model->shouldReceive('getAttributes')->once()->andReturn(['raw_foo' => 'raw_bar']);
 		$repo->getValidator()->shouldReceive('replace')->once()->with('key', '1')->andReturn(false);
 		$repo->getValidator()->shouldReceive('validUpdate')->once()->with(['raw_foo' => 'raw_bar'])->andReturn(false);
-		$repo->getValidator()->shouldReceive('errors')->once()->andReturn([]);
+		$repo->getValidator()->shouldReceive('getErrors')->once()->andReturn([]);
 		$this->assertFalse($repo->update($model, ['foo' => 'bar']));
 	}
 }
