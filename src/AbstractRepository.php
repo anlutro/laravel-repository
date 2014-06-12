@@ -429,6 +429,8 @@ abstract class AbstractRepository
 	 * @param  array $attributes
 	 *
 	 * @return mixed
+	 *
+	 * @throws \InvalidArgumentException if $attributes is empty
 	 */
 	public function getByAttributes(array $attributes)
 	{
