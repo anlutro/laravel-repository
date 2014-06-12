@@ -404,6 +404,11 @@ abstract class AbstractRepository
 	 */
 	public function findByAttributes(array $attributes)
 	{
+		if (empty($attributes)) {
+			if ($this->throwExceptions) throw $this->getNotFoundException();
+			return null;
+		}
+
 		return $this->fetchSingle($this->newAttributesQuery($attributes));
 	}
 
@@ -427,6 +432,10 @@ abstract class AbstractRepository
 	 */
 	public function getByAttributes(array $attributes)
 	{
+		if (empty($attributes)) {
+			throw new \InvalidArgumentException('Cannot getByAttributes with an empty set of attributes');
+		}
+
 		return $this->fetchMany($this->newAttributesQuery($attributes));
 	}
 
