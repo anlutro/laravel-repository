@@ -22,5 +22,5 @@
 			"anlutro\\LaravelRepository\\": "src/"
 		}
 	},
-	"minimum-stability": "stable"
+	"prefer-stable": true
 }
