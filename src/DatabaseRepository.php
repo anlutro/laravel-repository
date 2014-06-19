@@ -10,6 +10,7 @@
 namespace anlutro\LaravelRepository;
 
 use Illuminate\Database\Connection;
+use anlutro\LaravelValidation\ValidatorInterface;
 use Illuminate\Support\Fluent;
 
 /**
@@ -41,9 +42,9 @@ abstract class DatabaseRepository extends AbstractRepository
 
 	/**
 	 * @param \Illuminate\Database\Connection $db
-	 * @param \anlutro\LaravelValidation\Validator $validator
+	 * @param \anlutro\LaravelValidation\ValidatorInterface $validator
 	 */
-	public function __construct(Connection $db, Validator $validator = null)
+	public function __construct(Connection $db, ValidatorInterface $validator = null)
 	{
 		parent::__construct($validator);
 
@@ -55,7 +56,8 @@ abstract class DatabaseRepository extends AbstractRepository
 		$this->setConnection($db);
 
 		if ($validator) {
-			$this->validator->replace('table', $this->table);
+			$this->setValidator($validator);
+			$validator->replace('table', $this->table);
 		}
 	}
 
