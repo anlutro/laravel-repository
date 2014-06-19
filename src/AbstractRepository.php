@@ -53,6 +53,13 @@ abstract class AbstractRepository
 	protected $criteria = [];
 
 	/**
+	 * Criteria classes that should be applied to every query.
+	 *
+	 * @var string[]
+	 */
+	protected $defaultCriteria = [];
+
+	/**
 	 * Whether or not criteria should be reset on each query.
 	 *
 	 * @var boolean
@@ -71,7 +78,24 @@ abstract class AbstractRepository
 	{
 		$this->resetErrors();
 
+		$this->setupDefaultCriteria();
+
 		if ($validator) $this->validator = $validator;
+	}
+
+	protected function setupDefaultCriteria()
+	{
+		$defaultCriteria = $this->defaultCriteria;
+		$this->defaultCriteria = [];
+
+		foreach ($defaultCriteria as $criteria) {
+			$this->addDefaultCriteria(new $criteria);
+		}
+	}
+
+	public function addDefaultCriteria(CriteriaInterface $criteria)
+	{
+		$this->pushCriteria($criteria, true);
 	}
 
 	/**
@@ -317,9 +341,10 @@ abstract class AbstractRepository
 		return $this->doBeforeOrAfter('after', $action, [$result, $attributes]);
 	}
 
-	public function pushCriteria(CriteriaInterface $criteria)
+	public function pushCriteria(CriteriaInterface $criteria, $default = false)
 	{
-		$this->criteria[] = $criteria;
+		$property = $default ? 'defaultCriteria' : 'criteria';
+		$this->{$property}[] = $criteria;
 	}
 
 	public function resetCriteria()
@@ -329,6 +354,10 @@ abstract class AbstractRepository
 
 	public function applyCriteria($query)
 	{
+		foreach ($this->defaultCriteria as $criteria) {
+			$criteria->apply($query);
+		}
+
 		if (empty($this->criteria)) return;
 
 		foreach ($this->criteria as $criteria) {

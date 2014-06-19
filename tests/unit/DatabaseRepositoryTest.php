@@ -149,6 +149,20 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 		$repo->getAll();
 	}
 
+	/** @test */
+	public function DefaultCiteriaAreApplied()
+	{
+		$db = $this->mockConnection();
+		$repo = new DefaultCriteriaStub($db);
+
+		$query = $this->mockQuery();
+		$db->shouldReceive('table')->with('table')->andReturn($query);
+		$query->shouldReceive('applyCriteria')->once();
+		$query->shouldReceive('get')->once();
+
+		$repo->getAll();
+	}
+
 	public function makeModel(array $attributes)
 	{
 		return new Fluent($attributes);
@@ -168,6 +182,13 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 class DBRepoStub extends \anlutro\LaravelRepository\DatabaseRepository
 {
 	protected $table = 'table';
+}
+
+class DefaultCriteriaStub extends DBRepoStub
+{
+	protected $defaultCriteria = [
+		'anlutro\LaravelRepository\Tests\CriteriaStub'
+	];
 }
 
 class CriteriaStub implements \anlutro\LaravelRepository\CriteriaInterface
