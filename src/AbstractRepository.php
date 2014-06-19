@@ -78,15 +78,9 @@ abstract class AbstractRepository
 	{
 		$this->resetErrors();
 
-<<<<<<< HEAD
-		$this->setupDefaultCriteria();
-
-		if ($validator) $this->validator = $validator;
-=======
 		if ($validator) {
 			$this->setValidator($validator);
 		}
->>>>>>> master
 	}
 
 	protected function setupDefaultCriteria()
@@ -101,7 +95,7 @@ abstract class AbstractRepository
 
 	public function addDefaultCriteria(CriteriaInterface $criteria)
 	{
-		$this->pushCriteria($criteria, true);
+		$this->defaultCriteria[] = $criteria;
 	}
 
 	/**
@@ -346,10 +340,9 @@ abstract class AbstractRepository
 		return $this->doBeforeOrAfter('after', $action, [$result, $attributes]);
 	}
 
-	public function pushCriteria(CriteriaInterface $criteria, $default = false)
+	public function pushCriteria(CriteriaInterface $criteria)
 	{
-		$property = $default ? 'defaultCriteria' : 'criteria';
-		$this->{$property}[] = $criteria;
+		$this->criteria[] = $criteria;
 	}
 
 	public function resetCriteria()
