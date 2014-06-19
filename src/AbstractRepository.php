@@ -240,7 +240,7 @@ abstract class AbstractRepository
 	 */
 	protected function getFilterInstance()
 	{
-		return new SimpleFilter($this);
+		return new SimpleFilter();
 	}
 
 	/**
