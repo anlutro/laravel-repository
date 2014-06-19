@@ -112,7 +112,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		list($model, $validator, $repo) = $this->make(__NAMESPACE__.'\RepoWithBefores');
 		$mockModel = $this->makeMockModel();
 		$model->shouldReceive('newInstance')->once()->with([])->andReturn($mockModel);
-		$validator->shouldReceive('validCreate')->once()->with([])->andReturn(false);
+		$validator->shouldReceive('valid')->once()->with('create', [])->andReturn(false);
 		$validator->shouldReceive('getErrors')->once()->andReturn([]);
 
 		$this->assertFalse($repo->create([]));
@@ -125,7 +125,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$model->shouldReceive('newInstance')->once()->with([])->andReturn($mock = m::mock());
 		$mock->shouldReceive('fill')->once()->with(['foo' => 'bar']);
 		$mock->shouldReceive('save')->once()->andReturn(true);
-		$validator->shouldReceive('validCreate')->once()->with(['foo' => 'bar'])->andReturn(true);
+		$validator->shouldReceive('valid')->once()->with('create', ['foo' => 'bar'])->andReturn(true);
 		$this->assertSame($mock, $repo->create(['foo' => 'bar']));
 	}
 
@@ -148,7 +148,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$updateModel->id = 'foo';
 		$updateModel->exists = true;
 		$validator->shouldReceive('replace')->once()->with('key', 'foo');
-		$validator->shouldReceive('validUpdate')->once()->andReturn(false);
+		$validator->shouldReceive('valid')->once()->with('update', [])->andReturn(false);
 		$validator->shouldReceive('getErrors')->once()->andReturn([]);
 
 		$this->assertFalse($repo->update($updateModel, []));
@@ -164,7 +164,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$updateModel->shouldReceive('fill')->once()->with(['foo' => 'bar'])->andReturn(m::self());
 		$updateModel->shouldReceive('save')->once()->andReturn(true);
 		$validator->shouldReceive('replace')->once()->with('key', 'foo');
-		$validator->shouldReceive('validUpdate')->once()->andReturn(true);
+		$validator->shouldReceive('valid')->once()->with('update', ['foo' => 'bar'])->andReturn(true);
 
 		$this->assertTrue($repo->update($updateModel, ['foo' => 'bar']));
 	}
@@ -203,7 +203,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		return $mock;
 	}
 
-	public function makeMockValidator($class = 'anlutro\LaravelValidation\Validator')
+	public function makeMockValidator($class = 'anlutro\LaravelValidation\ValidatorInterface')
 	{
 		$mock = m::mock($class);
 		$mock->shouldReceive('replace')->once()->with('table', 'table');

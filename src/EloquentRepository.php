@@ -10,8 +10,7 @@
 namespace anlutro\LaravelRepository;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\MessageBag;
-use anlutro\LaravelValidation\Validator;
+use anlutro\LaravelValidation\ValidatorInterface;
 
 /**
  * Abstract Eloquent repository that provides some basic functionality.
@@ -32,16 +31,17 @@ abstract class EloquentRepository extends AbstractRepository
 
 	/**
 	 * @param \Illuminate\Database\Eloquent\Model $model
-	 * @param \anlutro\LaravelValidation\Validator $validator
+	 * @param \anlutro\LaravelValidation\ValidatorInterface $validator
 	 */
-	public function __construct(Model $model, Validator $validator = null)
+	public function __construct(Model $model, ValidatorInterface $validator = null)
 	{
 		parent::__construct($validator);
 
 		$this->model = $model;
 
 		if ($validator) {
-			$this->validator->replace('table', $this->model->getTable());
+			$this->setValidator($validator);
+			$validator->replace('table', $this->model->getTable());
 		}
 	}
 
