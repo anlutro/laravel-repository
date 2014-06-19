@@ -93,7 +93,7 @@ abstract class AbstractRepository
 		}
 	}
 
-	public function addDefaultCriteria(CriteriaInterface $criteria)
+	protected function addDefaultCriteria(CriteriaInterface $criteria)
 	{
 		$this->defaultCriteria[] = $criteria;
 	}
