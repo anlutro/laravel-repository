@@ -46,6 +46,13 @@ abstract class AbstractRepository
 	protected $validateEntity = false;
 
 	/**
+	 * Whether or not filters are reset after every query.
+	 *
+	 * @var boolean
+	 */
+	protected $resetFilters = true;
+
+	/**
 	 * @var \Illuminate\Support\MessageBag
 	 */
 	protected $errors;
@@ -159,6 +166,10 @@ abstract class AbstractRepository
 	protected function performQuery($query, $many)
 	{
 		$this->filter->apply($query);
+
+		if ($this->resetFilters) {
+			$this->resetFilters();
+		}
 
 		if ($many === false) {
 			$result = $this->getRegularQueryResults($query, false);
@@ -426,6 +437,11 @@ abstract class AbstractRepository
 	protected function fetchList($query, $column = 'id', $key = null)
 	{
 		$this->doBefore('query', $query, true);
+
+		if ($this->resetFilters) {
+			$this->resetFilters();
+		}
+
 		return $query->lists($column, $key);
 	}
 
