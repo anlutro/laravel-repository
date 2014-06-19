@@ -46,6 +46,20 @@ abstract class AbstractRepository
 	protected $validateEntity = false;
 
 	/**
+	 * The currently active criteria.
+	 *
+	 * @var \anlutro\LaravelRepository\CriteriaInterface[]
+	 */
+	protected $criteria = [];
+
+	/**
+	 * Whether or not criteria should be reset on each query.
+	 *
+	 * @var boolean
+	 */
+	protected $resetCriteria = true;
+
+	/**
 	 * @var \Illuminate\Support\MessageBag
 	 */
 	protected $errors;
@@ -152,6 +166,8 @@ abstract class AbstractRepository
 	 */
 	protected function performQuery($query, $many)
 	{
+		$this->applyCriteria($query);
+
 		if ($many === false) {
 			$result = $this->getRegularQueryResults($query, false);
 
@@ -301,6 +317,29 @@ abstract class AbstractRepository
 		return $this->doBeforeOrAfter('after', $action, [$result, $attributes]);
 	}
 
+	public function pushCriteria(CriteriaInterface $criteria)
+	{
+		$this->criteria[] = $criteria;
+	}
+
+	public function resetCriteria()
+	{
+		$this->criteria = [];
+	}
+
+	public function applyCriteria($query)
+	{
+		if (empty($this->criteria)) return;
+
+		foreach ($this->criteria as $criteria) {
+			$criteria->apply($query);
+		}
+
+		if ($this->resetCriteria) {
+			$this->resetCriteria();
+		}
+	}
+
 	/**
 	 * Create and persist a new entity with the given attributes.
 	 *
@@ -378,6 +417,7 @@ abstract class AbstractRepository
 	protected function fetchList($query, $column = 'id', $key = null)
 	{
 		$this->doBefore('query', $query, true);
+		$this->applyCriteria($query);
 		return $query->lists($column, $key);
 	}
 
@@ -412,6 +452,14 @@ abstract class AbstractRepository
 		return $this->fetchSingle($this->newAttributesQuery($attributes));
 	}
 
+	public function findByCriteria(CriteriaInterface $criteria)
+	{
+		$this->resetCriteria();
+		$this->pushCriteria($criteria);
+
+		return $this->fetchSingle($this->newQuery());
+	}
+
 	/**
 	 * Get all the entities for the repository.
 	 *
@@ -439,6 +487,14 @@ abstract class AbstractRepository
 		}
 
 		return $this->fetchMany($this->newAttributesQuery($attributes));
+	}
+
+	public function getByCriteria(CriteriaInterface $criteria)
+	{
+		$this->resetCriteria();
+		$this->pushCriteria($criteria);
+
+		return $this->fetchMany($this->newQuery());
 	}
 
 	/**
