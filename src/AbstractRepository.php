@@ -11,7 +11,7 @@ namespace anlutro\LaravelRepository;
 
 use Closure;
 use Illuminate\Support\MessageBag;
-use anlutro\LaravelValidation\Validator;
+use anlutro\LaravelValidation\ValidatorInterface;
 
 /**
  * Abstract repository class.
@@ -34,7 +34,7 @@ abstract class AbstractRepository
 	protected $paginate = false;
 
 	/**
-	 * @var \anlutro\LaravelValidation\Validator
+	 * @var \anlutro\LaravelValidation\ValidatorInterface
 	 */
 	protected $validator;
 
@@ -51,13 +51,15 @@ abstract class AbstractRepository
 	protected $errors;
 
 	/**
-	 * @param \anlutro\LaravelValidation\Validator $validator Optional
+	 * @param \anlutro\LaravelValidation\ValidatorInterface $validator Optional
 	 */
-	public function __construct(Validator $validator = null)
+	public function __construct(ValidatorInterface $validator)
 	{
 		$this->resetErrors();
 
-		if ($validator) $this->validator = $validator;
+		if ($validator) {
+			$this->setValidator($validator);
+		}
 	}
 
 	/**
@@ -132,8 +134,7 @@ abstract class AbstractRepository
 			return true;
 		}
 
-		$method = 'valid' . ucfirst($action);
-		$result = $this->validator->$method($attributes);
+		$result = $this->validator->valid($action, $attributes);
 
 		if ($result === false) {
 			$this->errors->merge($this->validator->getErrors());
@@ -227,9 +228,9 @@ abstract class AbstractRepository
 	/**
 	 * Set the repository's validator.
 	 *
-	 * @param \anlutro\LaravelValidation\Validator $validator
+	 * @param \anlutro\LaravelValidation\ValidatorInterface $validator
 	 */
-	public function setValidator(Validator $validator)
+	public function setValidator(ValidatorInterface $validator)
 	{
 		$this->validator = $validator;
 	}
@@ -237,7 +238,7 @@ abstract class AbstractRepository
 	/**
 	 * Get the repository's validator.
 	 *
-	 * @return \anlutro\LaravelValidation\Validator
+	 * @return \anlutro\LaravelValidation\ValidatorInterface
 	 */
 	public function getValidator()
 	{
