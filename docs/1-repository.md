@@ -84,3 +84,5 @@ Add a custom method that fetches all rows related to a specific user.
 		$query->where('user_id', '=', $user->id);
 		return $this->fetchMany($query);
 	}
+
+Next: [Database repository](2-database.md)

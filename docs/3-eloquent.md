@@ -50,3 +50,6 @@ All other types in afterCreate/afterUpdate.
 			$model->related()->sync($attributes['related']);
 		}
 	}
+
+Previous: [Database repositories](2-database.md)
+Next: [Criteria](4-criteria.md)

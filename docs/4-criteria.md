@@ -45,3 +45,5 @@ On your repository you can define an array of class names that are criteria that
 	];
 
 This is rarely useful as you can't call any methods on these criteria and they can't be resolved from the IoC container. Instead, you could inject the default criteria via the contructor or instantiate them manually and add them via the protected `addDefaultCriteria($criteria)` method.
+
+Previous: [Eloquent repository](3-eloquent.md)
