@@ -53,7 +53,7 @@ abstract class AbstractRepository
 	/**
 	 * @param \anlutro\LaravelValidation\ValidatorInterface $validator Optional
 	 */
-	public function __construct(ValidatorInterface $validator)
+	public function __construct(ValidatorInterface $validator = null)
 	{
 		$this->resetErrors();
 
