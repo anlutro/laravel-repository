@@ -46,6 +46,30 @@ abstract class AbstractRepository
 	protected $validateEntity = false;
 
 	/**
+	 * The currently active criteria.
+	 *
+	 * @var \anlutro\LaravelRepository\CriteriaInterface[]
+	 */
+	protected $criteria = [];
+
+	/**
+	 * Criteria classes that should be applied to every query.
+	 *
+	 * This array will be converted to an array of Criteria objects when the
+	 * repository is instantiated.
+	 *
+	 * @var string[]
+	 */
+	protected $defaultCriteria = [];
+
+	/**
+	 * Whether or not criteria should be reset on each query.
+	 *
+	 * @var boolean
+	 */
+	protected $resetCriteria = true;
+
+	/**
 	 * @var \Illuminate\Support\MessageBag
 	 */
 	protected $errors;
@@ -57,9 +81,37 @@ abstract class AbstractRepository
 	{
 		$this->resetErrors();
 
+		$this->setupDefaultCriteria();
+
 		if ($validator) {
 			$this->setValidator($validator);
 		}
+	}
+
+	/**
+	 * Set up the repository's default criteria.
+	 *
+	 * @return void
+	 */
+	protected function setupDefaultCriteria()
+	{
+		$defaultCriteria = $this->defaultCriteria;
+		$this->defaultCriteria = [];
+
+		foreach ($defaultCriteria as $criteria) {
+			$this->addDefaultCriteria(new $criteria);
+		}
+	}
+
+	/**
+	 * Add a default criteria to the repository. Default criteria are applied to
+	 * every query.
+	 *
+	 * @param \anlutro\LaravelRepository\CriteriaInterface $criteria
+	 */
+	protected function addDefaultCriteria(CriteriaInterface $criteria)
+	{
+		$this->defaultCriteria[] = $criteria;
 	}
 
 	/**
@@ -153,6 +205,8 @@ abstract class AbstractRepository
 	 */
 	protected function performQuery($query, $many)
 	{
+		$this->applyCriteria($query);
+
 		if ($many === false) {
 			$result = $this->getRegularQueryResults($query, false);
 
@@ -303,6 +357,52 @@ abstract class AbstractRepository
 	}
 
 	/**
+	 * Add a criteria to the current stack.
+	 *
+	 * @param  \anlutro\LaravelRepository\CriteriaInterface $criteria
+	 *
+	 * @return void
+	 */
+	public function pushCriteria(CriteriaInterface $criteria)
+	{
+		$this->criteria[] = $criteria;
+	}
+
+	/**
+	 * Reset the criteria stack.
+	 *
+	 * @return void
+	 */
+	public function resetCriteria()
+	{
+		$this->criteria = [];
+	}
+
+	/**
+	 * Apply the repository's criteria onto a query builder.
+	 *
+	 * @param  mixed $query
+	 *
+	 * @return void
+	 */
+	public function applyCriteria($query)
+	{
+		foreach ($this->defaultCriteria as $criteria) {
+			$criteria->apply($query);
+		}
+
+		if (empty($this->criteria)) return;
+
+		foreach ($this->criteria as $criteria) {
+			$criteria->apply($query);
+		}
+
+		if ($this->resetCriteria) {
+			$this->resetCriteria();
+		}
+	}
+
+	/**
 	 * Create and persist a new entity with the given attributes.
 	 *
 	 * @param  array  $attributes
@@ -379,6 +479,7 @@ abstract class AbstractRepository
 	protected function fetchList($query, $column = 'id', $key = null)
 	{
 		$this->doBefore('query', $query, true);
+		$this->applyCriteria($query);
 		return $query->lists($column, $key);
 	}
 
@@ -414,6 +515,21 @@ abstract class AbstractRepository
 	}
 
 	/**
+	 * Get a specific row by criteria.
+	 *
+	 * @param  \anlutro\LaravelRepository\CriteriaInterface $criteria
+	 *
+	 * @return mixed
+	 */
+	public function findByCriteria(CriteriaInterface $criteria)
+	{
+		$this->resetCriteria();
+		$this->pushCriteria($criteria);
+
+		return $this->fetchSingle($this->newQuery());
+	}
+
+	/**
 	 * Get all the entities for the repository.
 	 *
 	 * @return object[]
@@ -440,6 +556,21 @@ abstract class AbstractRepository
 		}
 
 		return $this->fetchMany($this->newAttributesQuery($attributes));
+	}
+
+	/**
+	 * Get a collection of rows by criteria.
+	 *
+	 * @param  \anlutro\LaravelRepository\CriteriaInterface $criteria
+	 *
+	 * @return mixed
+	 */
+	public function getByCriteria(CriteriaInterface $criteria)
+	{
+		$this->resetCriteria();
+		$this->pushCriteria($criteria);
+
+		return $this->fetchMany($this->newQuery());
 	}
 
 	/**
