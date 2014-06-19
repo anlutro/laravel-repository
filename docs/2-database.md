@@ -9,5 +9,5 @@ To create a database repository, we simply need to define the table that should 
 		protected $table = 'my_table';
 	}
 
-Previous: [Repositories](1-reposity.md)
+Previous: [Repositories](1-reposity.md)  
 Next: [Eloquent repository](3-eloquent.md)

@@ -51,5 +51,5 @@ All other types in afterCreate/afterUpdate.
 		}
 	}
 
-Previous: [Database repositories](2-database.md)
+Previous: [Database repositories](2-database.md)  
 Next: [Criteria](4-criteria.md)
