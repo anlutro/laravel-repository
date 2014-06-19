@@ -46,9 +46,21 @@ abstract class AbstractRepository
 	protected $validateEntity = false;
 
 	/**
+	 * Whether or not filters are reset after every query.
+	 *
+	 * @var boolean
+	 */
+	protected $resetFilters = true;
+
+	/**
 	 * @var \Illuminate\Support\MessageBag
 	 */
 	protected $errors;
+
+	/**
+	 * @var \anlutro\LaravelRepository\FilterInterface
+	 */
+	protected $filter;
 
 	/**
 	 * @param \anlutro\LaravelValidation\Validator $validator Optional
@@ -56,6 +68,7 @@ abstract class AbstractRepository
 	public function __construct(Validator $validator = null)
 	{
 		$this->resetErrors();
+		$this->resetFilters();
 
 		if ($validator) $this->validator = $validator;
 	}
@@ -152,6 +165,12 @@ abstract class AbstractRepository
 	 */
 	protected function performQuery($query, $many)
 	{
+		$this->filter->apply($query);
+
+		if ($this->resetFilters) {
+			$this->resetFilters();
+		}
+
 		if ($many === false) {
 			$result = $this->getRegularQueryResults($query, false);
 
@@ -205,6 +224,26 @@ abstract class AbstractRepository
 	}
 
 	/**
+	 * Reset the repository's filter.
+	 *
+	 * @return void
+	 */
+	protected function resetFilters()
+	{
+		$this->setFilter($this->getFilterInstance());
+	}
+
+	/**
+	 * Get a new filter instance.
+	 *
+	 * @return \anlutro\LaravelRepository\FilterInterface
+	 */
+	protected function getFilterInstance()
+	{
+		return new SimpleFilter();
+	}
+
+	/**
 	 * Reset the repository's errors.
 	 *
 	 * @return void
@@ -242,6 +281,26 @@ abstract class AbstractRepository
 	public function getValidator()
 	{
 		return $this->validator;
+	}
+
+	/**
+	 * Set the repository's filter.
+	 *
+	 * @param \anlutro\LaravelRepository\FilterInterface $filter
+	 */
+	public function setFilter(FilterInterface $filter)
+	{
+		$this->filter = $filter;
+	}
+
+	/**
+	 * Get the repository's filter.
+	 *
+	 * @return \anlutro\LaravelRepository\FilterInterface|null
+	 */
+	public function getFilter()
+	{
+		return $this->filter;
 	}
 
 	/**
@@ -378,6 +437,11 @@ abstract class AbstractRepository
 	protected function fetchList($query, $column = 'id', $key = null)
 	{
 		$this->doBefore('query', $query, true);
+
+		if ($this->resetFilters) {
+			$this->resetFilters();
+		}
+
 		return $query->lists($column, $key);
 	}
 
@@ -565,4 +629,29 @@ abstract class AbstractRepository
 	 * @return mixed
 	 */
 	protected abstract function getEntityAttributes($entity);
+
+	/**
+	 * Handle missing method calls.
+	 *
+	 * Method calls starting with "filter" are forwarded to the filter class.
+	 * Method calls starting with "valid" are forwarded to the validator.
+	 *
+	 * @param  string $method
+	 * @param  array  $args
+	 *
+	 * @return mixed
+	 * @throws \BadMethodCallException
+	 */
+	public function __call($method, array $args)
+	{
+		if (
+			(substr($method, 0, 6) === 'filter' && is_callable($callable = [$this->filter, $method])) ||
+			(substr($method, 0, 5) === 'valid' && is_callable($callable = [$this->validator, $method]))
+		) {
+			return call_user_func_array($callable, $args);
+		}
+
+		$class = get_class($this);
+		throw new \BadMethodCallException("Call to undefined method {$class}::{$method}");
+	}
 }
