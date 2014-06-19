@@ -78,11 +78,18 @@ abstract class AbstractRepository
 	{
 		$this->resetErrors();
 
+		$this->setupDefaultCriteria();
+
 		if ($validator) {
 			$this->setValidator($validator);
 		}
 	}
 
+	/**
+	 * Set up the repository's default criteria.
+	 *
+	 * @return void
+	 */
 	protected function setupDefaultCriteria()
 	{
 		$defaultCriteria = $this->defaultCriteria;
@@ -93,6 +100,12 @@ abstract class AbstractRepository
 		}
 	}
 
+	/**
+	 * Add a default criteria to the repository. Default criteria are applied to
+	 * every query.
+	 *
+	 * @param \anlutro\LaravelRepository\CriteriaInterface $criteria
+	 */
 	protected function addDefaultCriteria(CriteriaInterface $criteria)
 	{
 		$this->defaultCriteria[] = $criteria;
@@ -340,16 +353,35 @@ abstract class AbstractRepository
 		return $this->doBeforeOrAfter('after', $action, [$result, $attributes]);
 	}
 
+	/**
+	 * Add a criteria to the current stack.
+	 *
+	 * @param  \anlutro\LaravelRepository\CriteriaInterface $criteria
+	 *
+	 * @return void
+	 */
 	public function pushCriteria(CriteriaInterface $criteria)
 	{
 		$this->criteria[] = $criteria;
 	}
 
+	/**
+	 * Reset the criteria stack.
+	 *
+	 * @return void
+	 */
 	public function resetCriteria()
 	{
 		$this->criteria = [];
 	}
 
+	/**
+	 * Apply the repository's criteria onto a query builder.
+	 *
+	 * @param  mixed $query
+	 *
+	 * @return void
+	 */
 	public function applyCriteria($query)
 	{
 		foreach ($this->defaultCriteria as $criteria) {
