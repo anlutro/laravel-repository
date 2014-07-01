@@ -143,11 +143,9 @@ abstract class DatabaseRepository extends AbstractRepository
 			$entity->$key = $value;
 		}
 
-		return $this->newQuery()
+		return (bool) $this->newQuery()
 			->where($this->getKeyName(), '=', $entity->{$this->primaryKey})
 			->update($entity->toArray());
-
-		return $result;
 	}
 
 	/**
@@ -155,11 +153,9 @@ abstract class DatabaseRepository extends AbstractRepository
 	 */
 	protected function performDelete($entity)
 	{
-		return $this->newQuery()
+		return (bool) $this->newQuery()
 			->where($this->getKeyName(), '=', $entity->{$this->primaryKey})
 			->delete();
-
-		return (bool) $result;
 	}
 
 	/**

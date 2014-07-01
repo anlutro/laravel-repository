@@ -58,7 +58,7 @@ abstract class AbstractRepository
 	 * This array will be converted to an array of Criteria objects when the
 	 * repository is instantiated.
 	 *
-	 * @var string[]
+	 * @var string[]|\anlutro\LaravelRepository\CriteriaInterface[]
 	 */
 	protected $defaultCriteria = [];
 
@@ -123,7 +123,7 @@ abstract class AbstractRepository
 	 *
 	 * @param  string  $action
 	 * @param  mixed   $object
-	 * @param  array   $attributes
+	 * @param  mixed   $attributes
 	 * @param  boolean $validate
 	 *
 	 * @return mixed
@@ -166,10 +166,13 @@ abstract class AbstractRepository
 	protected function doBeforeOrAfter($which, $action, array $args)
 	{
 		$method = $which.ucfirst($action);
+
 		if (method_exists($this, $method)) {
 			$result = call_user_func_array([$this, $method], $args);
 			if ($result === false) return $result;
 		}
+
+		return null;
 	}
 
 	/**
@@ -337,6 +340,10 @@ abstract class AbstractRepository
 	 *
 	 * @see   doBeforeOrAfter
 	 *
+	 * @param  string $action
+	 * @param  object $object
+	 * @param  mixed  $attributes
+	 *
 	 * @return mixed
 	 */
 	protected function doBefore($action, $object, $attributes)
@@ -348,6 +355,10 @@ abstract class AbstractRepository
 	 * Do an after action.
 	 *
 	 * @see   doBeforeOrAfter
+	 *
+	 * @param  string $action
+	 * @param  mixed  $result
+	 * @param  mixed  $attributes
 	 *
 	 * @return mixed
 	 */
@@ -506,12 +517,17 @@ abstract class AbstractRepository
 	 */
 	public function findByAttributes(array $attributes)
 	{
+		$query = $this->newAttributesQuery($attributes);
+
 		if (empty($attributes)) {
-			if ($this->throwExceptions) throw $this->getNotFoundException();
+			if ($this->throwExceptions) {
+				throw $this->getNotFoundException($query);
+			}
+
 			return null;
 		}
 
-		return $this->fetchSingle($this->newAttributesQuery($attributes));
+		return $this->fetchSingle($query);
 	}
 
 	/**

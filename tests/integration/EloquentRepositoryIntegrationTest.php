@@ -1,7 +1,9 @@
 <?php
 namespace anlutro\LaravelRepository\Tests;
 
-class EloquentRepositoryIntegrationTest extends \anlutro\LaravelTesting\EloquentTestCase
+use anlutro\LaravelTesting\EloquentTestCase;
+
+class EloquentRepositoryIntegrationTest extends EloquentTestCase
 {
 	/**
 	 * @test
