@@ -108,10 +108,14 @@ abstract class AbstractRepository
 	 * every query.
 	 *
 	 * @param \anlutro\LaravelRepository\CriteriaInterface $criteria
+	 *
+	 * @return static
 	 */
 	protected function addDefaultCriteria(CriteriaInterface $criteria)
 	{
 		$this->defaultCriteria[] = $criteria;
+
+		return $this;
 	}
 
 	/**
@@ -286,10 +290,14 @@ abstract class AbstractRepository
 	 * Set the repository's validator.
 	 *
 	 * @param \anlutro\LaravelValidation\ValidatorInterface $validator
+	 *
+	 * @return static
 	 */
 	public function setValidator(ValidatorInterface $validator)
 	{
 		$this->validator = $validator;
+
+		return $this;
 	}
 
 	/**
@@ -312,6 +320,7 @@ abstract class AbstractRepository
 	public function paginate($toggle)
 	{
 		$this->paginate = $toggle === false ? false : (int) $toggle;
+
 		return $this;
 	}
 
@@ -372,21 +381,25 @@ abstract class AbstractRepository
 	 *
 	 * @param  \anlutro\LaravelRepository\CriteriaInterface $criteria
 	 *
-	 * @return void
+	 * @return static
 	 */
 	public function pushCriteria(CriteriaInterface $criteria)
 	{
 		$this->criteria[] = $criteria;
+
+		return $this;
 	}
 
 	/**
 	 * Reset the criteria stack.
 	 *
-	 * @return void
+	 * @return static
 	 */
 	public function resetCriteria()
 	{
 		$this->criteria = [];
+
+		return $this;
 	}
 
 	/**
@@ -491,6 +504,7 @@ abstract class AbstractRepository
 	{
 		$this->doBefore('query', $query, true);
 		$this->applyCriteria($query);
+
 		return $query->lists($column, $key);
 	}
 
@@ -505,6 +519,7 @@ abstract class AbstractRepository
 	{
 		$query = $this->newQuery()
 			->where($this->getKeyName(), '=', $key);
+
 		return $this->fetchSingle($query);
 	}
 
@@ -553,6 +568,7 @@ abstract class AbstractRepository
 	public function getAll()
 	{
 		$query = $this->newQuery();
+
 		return $this->fetchMany($query);
 	}
 

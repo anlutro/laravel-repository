@@ -69,6 +69,8 @@ abstract class DatabaseRepository extends AbstractRepository
 	public function setConnection(Connection $db)
 	{
 		$this->db = $db;
+
+		return $this;
 	}
 
 	/**
@@ -80,16 +82,6 @@ abstract class DatabaseRepository extends AbstractRepository
 	}
 
 	/**
-	 * Get the table that's being queried from.
-	 *
-	 * @return string
-	 */
-	public function getTable()
-	{
-		return $this->table;
-	}
-
-	/**
 	 * Set the table to query from.
 	 *
 	 * @param string $table
@@ -97,6 +89,18 @@ abstract class DatabaseRepository extends AbstractRepository
 	public function setTable($table)
 	{
 		$this->table = (string) $table;
+	}
+
+	/**
+	 * Get the table that's being queried from.
+	 *
+	 * @return string
+	 */
+	public function getTable()
+	{
+		return $this->table;
+
+		return $this;
 	}
 
 	/**

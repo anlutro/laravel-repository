@@ -46,16 +46,6 @@ abstract class EloquentRepository extends AbstractRepository
 	}
 
 	/**
-	 * Get the repository's model.
-	 *
-	 * @return \Illuminate\Database\Eloquent\Model
-	 */
-	public function getModel()
-	{
-		return $this->model;
-	}
-
-	/**
 	 * Set the repository's model.
 	 *
 	 * @param $model  \Illuminate\Database\Eloquent\Model
@@ -63,6 +53,18 @@ abstract class EloquentRepository extends AbstractRepository
 	public function setModel($model)
 	{
 		$this->model = $model;
+
+		return $this;
+	}
+
+	/**
+	 * Get the repository's model.
+	 *
+	 * @return \Illuminate\Database\Eloquent\Model
+	 */
+	public function getModel()
+	{
+		return $this->model;
 	}
 
 	/**
@@ -103,6 +105,7 @@ abstract class EloquentRepository extends AbstractRepository
 	protected function performCreate($model, array $attributes)
 	{
 		$model->fill($attributes);
+
 		return $this->perform('save', $model, $attributes, false);
 	}
 
@@ -112,6 +115,7 @@ abstract class EloquentRepository extends AbstractRepository
 	protected function performUpdate($model, array $attributes)
 	{
 		$model->fill($attributes);
+
 		return $this->perform('save', $model, $attributes, false);
 	}
 
@@ -121,6 +125,7 @@ abstract class EloquentRepository extends AbstractRepository
 	protected function performSave($model, array $attributes)
 	{
 		$method = $this->push ? 'push' : 'save';
+
 		return $model->$method() ? $model : false;
 	}
 
