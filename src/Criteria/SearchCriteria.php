@@ -13,16 +13,22 @@ use anlutro\LaravelRepository\CriteriaInterface;
 
 class SearchCriteria implements CriteriaInterface
 {
-	public function __construct(array $searchableColumns)
+	protected $columns;
+	protected $search;
+
+	public function __construct(array $searchableColumns, $searchFor)
 	{
 		$this->columns = $searchableColumns;
+		$this->search = $searchFor;
 	}
 
 	public function apply($query)
 	{
-		foreach ($this->columns as $key => $value) {
-			$value = '%'.str_replace(' ', '%', $value).'%';
-			$query->where($key, 'like', $value);
-		}
+		$query->where(function($query) {
+			$value = '%'.str_replace(' ', '%', $this->search).'%';
+			foreach ($this->columns as $column) {
+				$query->where($column, 'like', $value);
+			}
+		});
 	}
 }
