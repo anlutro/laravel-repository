@@ -9,6 +9,7 @@
 
 namespace anlutro\LaravelRepository\Criteria;
 
+use anlutro\LaravelRepository\QueryJoinStack;
 use anlutro\LaravelRepository\CriteriaInterface;
 
 class SimpleCriteria implements CriteriaInterface
@@ -38,7 +39,7 @@ class SimpleCriteria implements CriteriaInterface
 		$this->orWhereIns[] = [$column, $values];
 	}
 
-	public function apply($query)
+	public function apply($query, QueryJoinStack $joins)
 	{
 		foreach (['where', 'orWhere', 'whereIn', 'orWhereIn'] as $method) {
 			foreach ($this->{$method.'s'} as $params) {
