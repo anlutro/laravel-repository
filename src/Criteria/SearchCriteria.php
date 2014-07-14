@@ -9,6 +9,7 @@
 
 namespace anlutro\LaravelRepository\Criteria;
 
+use anlutro\LaravelRepository\QueryJoinStack;
 use anlutro\LaravelRepository\CriteriaInterface;
 
 class SearchCriteria implements CriteriaInterface
@@ -22,7 +23,7 @@ class SearchCriteria implements CriteriaInterface
 		$this->search = $searchFor;
 	}
 
-	public function apply($query)
+	public function apply($query, QueryJoinStack $joins)
 	{
 		$query->where(function($query) {
 			$value = '%'.str_replace(' ', '%', $this->search).'%';

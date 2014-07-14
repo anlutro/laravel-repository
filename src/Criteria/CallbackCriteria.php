@@ -9,6 +9,7 @@
 
 namespace anlutro\LaravelRepository\Criteria;
 
+use anlutro\LaravelRepository\QueryJoinStack;
 use anlutro\LaravelRepository\CriteriaInterface;
 
 /**
@@ -23,7 +24,7 @@ class CallbackCriteria implements CriteriaInterface
 		$this->callback = $callback;
 	}
 
-	public function apply($query)
+	public function apply($query, QueryJoinStack $joins)
 	{
 		call_user_func($this->callback, $query);
 	}

@@ -15,8 +15,9 @@ interface CriteriaInterface
 	 * Apply the criteria to the query builder instance.
 	 *
 	 * @param \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder $query
+	 * @param \anlutro\LaravelRepository\QueryJoinStack $joins
 	 *
 	 * @return void
 	 */
-	public function apply($query);
+	public function apply($query, QueryJoinStack $joins);
 }

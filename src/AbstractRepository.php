@@ -411,19 +411,24 @@ abstract class AbstractRepository
 	 */
 	public function applyCriteria($query)
 	{
+		$joinStack = new QueryJoinStack($query);
+
 		foreach ($this->defaultCriteria as $criteria) {
-			$criteria->apply($query);
+			$criteria->apply($query, $joinStack);
 		}
 
-		if (empty($this->criteria)) return;
+		if (! empty($this->criteria))
+		{
+			foreach ($this->criteria as $criteria) {
+				$criteria->apply($query, $joinStack);
+			}
 
-		foreach ($this->criteria as $criteria) {
-			$criteria->apply($query);
+			if ($this->resetCriteria) {
+				$this->resetCriteria();
+			}
 		}
 
-		if ($this->resetCriteria) {
-			$this->resetCriteria();
-		}
+		$joinStack->apply();
 	}
 
 	/**
