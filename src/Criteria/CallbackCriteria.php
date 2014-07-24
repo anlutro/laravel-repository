@@ -16,13 +16,24 @@ use anlutro\LaravelRepository\CriteriaInterface;
  */
 class CallbackCriteria implements CriteriaInterface
 {
+
+	/**
+	 * @param Callable
+	 */
 	protected $callback;
 
+	/**
+	 * @param Callable $callback
+	 */
 	public function __construct(callable $callback)
 	{
 		$this->callback = $callback;
 	}
 
+	/**
+	 * @param \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder $query
+	 * @return void
+	 */
 	public function apply($query)
 	{
 		call_user_func($this->callback, $query);

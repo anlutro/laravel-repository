@@ -13,15 +13,31 @@ use anlutro\LaravelRepository\CriteriaInterface;
 
 class SearchCriteria implements CriteriaInterface
 {
-	protected $columns;
-	protected $search;
 
+	/**
+	 * @var array
+	 */
+	protected $columns = [];
+
+	/**
+	 * @var string
+	 */
+	protected $search = null;
+
+	/**
+	 * @param array $searchableColumns
+	 * @param string $searchFor
+	 */
 	public function __construct(array $searchableColumns, $searchFor)
 	{
 		$this->columns = $searchableColumns;
 		$this->search = $searchFor;
 	}
 
+	/**
+	 * @param \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder $query
+	 * @return void
+	 */
 	public function apply($query)
 	{
 		$query->where(function($query) {
