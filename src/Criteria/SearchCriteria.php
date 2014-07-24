@@ -13,7 +13,6 @@ use anlutro\LaravelRepository\CriteriaInterface;
 
 class SearchCriteria implements CriteriaInterface
 {
-
 	/**
 	 * @var array
 	 */
@@ -22,10 +21,10 @@ class SearchCriteria implements CriteriaInterface
 	/**
 	 * @var string
 	 */
-	protected $search = null;
+	protected $search;
 
 	/**
-	 * @param array $searchableColumns
+	 * @param array  $searchableColumns
 	 * @param string $searchFor
 	 */
 	public function __construct(array $searchableColumns, $searchFor)
@@ -35,7 +34,8 @@ class SearchCriteria implements CriteriaInterface
 	}
 
 	/**
-	 * @param \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder $query
+	 * @param  \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder $query
+	 *
 	 * @return void
 	 */
 	public function apply($query)

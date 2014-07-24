@@ -13,7 +13,6 @@ use anlutro\LaravelRepository\CriteriaInterface;
 
 class SimpleCriteria implements CriteriaInterface
 {
-	
 	/**
 	 * @var array
 	 */
@@ -35,9 +34,10 @@ class SimpleCriteria implements CriteriaInterface
 	protected $orWhereIns = [];
 
 	/**
-	 * @param string $column
-	 * @param string $value
-	 * @param string $operator
+	 * @param  string $column
+	 * @param  string $value
+	 * @param  string $operator
+	 *
 	 * @return void
 	 */
 	public function where($column, $value, $operator = '=')
@@ -46,9 +46,10 @@ class SimpleCriteria implements CriteriaInterface
 	}
 
 	/**
-	 * @param string $column
-	 * @param string $value
-	 * @param string $operator
+	 * @param  string $column
+	 * @param  string $value
+	 * @param  string $operator
+	 *
 	 * @return void
 	 */
 	public function orWhere($column, $value, $operator = '=')
@@ -57,8 +58,9 @@ class SimpleCriteria implements CriteriaInterface
 	}
 
 	/**
-	 * @param string $column
-	 * @param array $values
+	 * @param  string $column
+	 * @param  array $values
+	 *
 	 * @return void
 	 */
 	public function whereIn($column, array $values)
@@ -68,7 +70,8 @@ class SimpleCriteria implements CriteriaInterface
 
 	/**
 	 * @param string $column
-	 * @param array $values
+	 * @param array  $values
+	 *
 	 * @return void
 	 */
 	public function orWhereIn($column, array $values)
@@ -77,7 +80,8 @@ class SimpleCriteria implements CriteriaInterface
 	}
 
 	/**
-	 * @param \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder $query
+	 * @param  \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder $query
+	 *
 	 * @return void
 	 */
 	public function apply($query)
