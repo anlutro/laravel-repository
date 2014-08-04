@@ -10,8 +10,8 @@
 	],
 	"require": {
 		"php": ">=5.4.0",
-		"illuminate/database": "~4.1",
-		"anlutro/l4-validation": "~0.5.5"
+		"anlutro/l4-validation": "~0.5.5",
+		"illuminate/database": "~4.1"
 	},
 	"require-dev": {
 		"mockery/mockery": "0.9.*",
