@@ -16,7 +16,7 @@ use anlutro\LaravelValidation\ValidatorInterface;
 /**
  * Abstract repository class.
  */
-abstract class AbstractRepository
+abstract class AbstractRepository implements RepositoryInterface
 {
 	/**
 	 * Whether or not to throw exceptions or return null when "find" methods do
