@@ -247,7 +247,7 @@ abstract class AbstractRepository
 	 * @param  mixed   $query
 	 * @param  boolean $many
 	 *
-	 * @return mixed
+	 * @return array|Fluent
 	 */
 	protected function getRegularQueryResults($query, $many)
 	{

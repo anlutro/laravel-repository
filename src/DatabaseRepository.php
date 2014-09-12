@@ -197,4 +197,24 @@ abstract class DatabaseRepository extends AbstractRepository
 			$entity->$key = $value;
 		}
 	}
+
+	protected function getRegularQueryResults($query, $many)
+	{
+		$results = parent::getRegularQueryResults($query, $many);
+
+		if ($many) {
+			return array_map([$this, 'getNew'], $results);
+		} else {
+			return $results ? $this->getNew($results) : $results;
+		}
+	}
+
+	protected function getPaginatedQueryResults($query)
+	{
+		$paginator = parent::getPaginatedQueryResults();
+
+		$paginator->setItems(array_map([$this, 'getNew'], $paginator->setItems()));
+
+		return $paginator;
+	}
 }
