@@ -83,11 +83,15 @@ abstract class DatabaseRepository extends AbstractRepository
 	/**
 	 * Set the table to query from.
 	 *
-	 * @param string $table
+	 * @param  string $table
+	 *
+	 * @return $this
 	 */
 	public function setTable($table)
 	{
 		$this->table = (string) $table;
+
+		return $this;
 	}
 
 	/**
@@ -98,8 +102,6 @@ abstract class DatabaseRepository extends AbstractRepository
 	public function getTable()
 	{
 		return $this->table;
-
-		return $this;
 	}
 
 	/**
@@ -181,6 +183,14 @@ abstract class DatabaseRepository extends AbstractRepository
 		return $entity->getAttributes();
 	}
 
+	/**
+	 * Fill an entity's attributes.
+	 *
+	 * @param  mixed  $entity
+	 * @param  array  $attributes
+	 *
+	 * @return void
+	 */
 	protected function fillEntityAttributes($entity, array $attributes)
 	{
 		foreach ($attributes as $key => $value) {

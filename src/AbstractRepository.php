@@ -109,7 +109,7 @@ abstract class AbstractRepository
 	 *
 	 * @param \anlutro\LaravelRepository\CriteriaInterface $criteria
 	 *
-	 * @return static
+	 * @return $this
 	 */
 	protected function addDefaultCriteria(CriteriaInterface $criteria)
 	{
@@ -291,7 +291,7 @@ abstract class AbstractRepository
 	 *
 	 * @param \anlutro\LaravelValidation\ValidatorInterface $validator
 	 *
-	 * @return static
+	 * @return $this
 	 */
 	public function setValidator(ValidatorInterface $validator)
 	{
@@ -315,7 +315,7 @@ abstract class AbstractRepository
 	 *
 	 * @param  false|int $toggle
 	 *
-	 * @return static
+	 * @return $this
 	 */
 	public function paginate($toggle)
 	{
@@ -331,7 +331,7 @@ abstract class AbstractRepository
 	 * @param  boolean $toggleValidator Whether or not to toggle exceptions on
 	 * the validator as well as the repository. Defaults to true
 	 *
-	 * @return static
+	 * @return $this
 	 */
 	public function toggleExceptions($toggle, $toggleValidator = true)
 	{
@@ -381,7 +381,7 @@ abstract class AbstractRepository
 	 *
 	 * @param  \anlutro\LaravelRepository\CriteriaInterface $criteria
 	 *
-	 * @return static
+	 * @return $this
 	 */
 	public function pushCriteria(CriteriaInterface $criteria)
 	{
@@ -393,7 +393,7 @@ abstract class AbstractRepository
 	/**
 	 * Reset the criteria stack.
 	 *
-	 * @return static
+	 * @return $this
 	 */
 	public function resetCriteria()
 	{
