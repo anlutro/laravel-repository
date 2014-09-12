@@ -40,7 +40,6 @@ abstract class EloquentRepository extends AbstractRepository
 		$this->model = $model;
 
 		if ($validator) {
-			$this->setValidator($validator);
 			$validator->replace('table', $this->model->getTable());
 		}
 	}
