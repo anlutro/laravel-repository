@@ -677,6 +677,15 @@ abstract class AbstractRepository
 	public abstract function getNew(array $attributes = array());
 
 	/**
+	 * Persist an entity.
+	 *
+	 * @param  mixed $entity
+	 *
+	 * @return boolean
+	 */
+	public abstract function persist($entity);
+
+	/**
 	 * Perform a create action.
 	 *
 	 * @param  object  $entity

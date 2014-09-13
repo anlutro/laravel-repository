@@ -217,4 +217,13 @@ abstract class DatabaseRepository extends AbstractRepository
 
 		return $paginator;
 	}
+
+	public function persist($entity)
+	{
+		if ($key = $this->getEntityKey($entity)) {
+			return $this->update($entity, []);
+		} else {
+			return (bool) $this->perform('create', $entity, [], true);
+		}
+	}
 }

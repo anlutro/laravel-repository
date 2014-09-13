@@ -33,13 +33,19 @@ class EntityRepositoryTest extends PHPUnit_Framework_TestCase
 		$repo = $this->makeRepo('StubEntityRepository');
 		$entity = $repo->getNew(['foo' => 'bar']);
 		$entity->setFoo('baz');
+		$repo->getConnection()->shouldReceive('table->insert')->once();
 		$repo->persist($entity);
 	}
 }
 
 class StubEntity
 {
+	protected $id;
 	protected $foo;
+	public function getKey()
+	{
+		return $this->id;
+	}
 	public function getFoo()
 	{
 		return $this->foo;
@@ -54,7 +60,9 @@ class StubDataMapper
 {
 	public function fill($entity, $attributes)
 	{
-		$entity->setFoo(strtolower($attributes['foo']));
+		if (isset($attributes['foo'])) {
+			$entity->setFoo(strtolower($attributes['foo']));
+		}
 	}
 
 	public function map($entity)
