@@ -33,8 +33,9 @@ class EntityRepositoryTest extends PHPUnit_Framework_TestCase
 		$repo = $this->makeRepo('StubEntityRepository');
 		$entity = $repo->getNew(['foo' => 'bar']);
 		$entity->setFoo('baz');
-		$repo->getConnection()->shouldReceive('table->insert')->once();
+		$repo->getConnection()->shouldReceive('table->insertGetId')->once()->andReturn(1);
 		$repo->persist($entity);
+		$this->assertEquals(1, $entity->getKey());
 	}
 }
 
@@ -45,6 +46,10 @@ class StubEntity
 	public function getKey()
 	{
 		return $this->id;
+	}
+	public function setKey($id)
+	{
+		$this->id = $id;
 	}
 	public function getFoo()
 	{

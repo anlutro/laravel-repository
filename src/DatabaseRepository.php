@@ -132,9 +132,14 @@ abstract class DatabaseRepository extends AbstractRepository
 		$this->fillEntityAttributes($entity, $attributes);
 
 		$result = $this->newQuery()
-			->insert($this->getEntityAttributes($entity));
+			->insertGetId($this->getEntityAttributes($entity));
 
-		return $result ? $entity : false;
+		if ($result) {
+			$this->setEntityKey($entity, $result);
+			return $entity;
+		}
+
+		return false;
 	}
 
 	/**
@@ -173,6 +178,11 @@ abstract class DatabaseRepository extends AbstractRepository
 	protected function getEntityKey($entity)
 	{
 		return $entity->{$this->primaryKey};
+	}
+
+	protected function setEntityKey($entity, $key)
+	{
+		$entity->{$this->primaryKey} = $key;
 	}
 
 	/**

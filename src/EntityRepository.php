@@ -27,6 +27,11 @@ class EntityRepository extends DatabaseRepository
 		return $entity->getKey();
 	}
 
+	protected function setEntityKey($entity, $key)
+	{
+		return $entity->setKey($key);
+	}
+
 	protected function getEntityAttributes($entity)
 	{
 		return $this->getDataMapper()->map($entity);

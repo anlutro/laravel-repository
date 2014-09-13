@@ -52,7 +52,7 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 
 		$query = $this->mockQuery();
 		$db->shouldReceive('table')->with('table')->andReturn($query);
-		$query->shouldReceive('insert')->with($data)->andReturn(true);
+		$query->shouldReceive('insertGetId')->with($data)->andReturn(1);
 
 		$result = $repo->create($data);
 		$this->assertEquals('bar', $result->foo);
@@ -67,7 +67,7 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 
 		$query = $this->mockQuery();
 		$db->shouldReceive('table')->with('table')->andReturn($query);
-		$query->shouldReceive('insert')->with($data)->andReturn(false);
+		$query->shouldReceive('insertGetId')->with($data)->andReturn(false);
 
 		$this->assertFalse($repo->create($data));
 	}
