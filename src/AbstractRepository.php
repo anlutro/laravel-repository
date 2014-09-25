@@ -606,6 +606,25 @@ abstract class AbstractRepository
 	}
 
 	/**
+	 * Get a collection of rows by an array of primary keys.
+	 *
+	 * @param  array  $keys
+	 *
+	 * @return mixed
+	 */
+	public function getByKeys(array $keys)
+	{
+		if (count($keys) < 1) {
+			throw new \InvalidArgumentException('Cannot getByKeys with an empty array');
+		}
+
+		$query = $this->newQuery()
+			->whereIn($this->getKeyName(), $keys);
+
+		return $this->fetchMany($query);
+	}
+
+	/**
 	 * Get a list of columns from the repository.
 	 *
 	 * @see    \Illuminate\Database\Query::lists()
