@@ -269,11 +269,13 @@ abstract class AbstractRepository
 	/**
 	 * Reset the repository's errors.
 	 *
-	 * @return void
+	 * @return $this
 	 */
 	protected function resetErrors()
 	{
 		$this->errors = new MessageBag;
+
+		return $this;
 	}
 
 	/**
@@ -561,9 +563,9 @@ abstract class AbstractRepository
 	}
 
 	/**
-	 * Get all the entities for the repository.
+	 * Get all rows.
 	 *
-	 * @return object[]
+	 * @return mixed
 	 */
 	public function getAll()
 	{
@@ -583,15 +585,16 @@ abstract class AbstractRepository
 	 */
 	public function getByAttributes(array $attributes)
 	{
-		if (empty($attributes)) {
-			throw new \InvalidArgumentException('Cannot getByAttributes with an empty set of attributes');
+		if (count($attributes) > 1) {
+			throw new \InvalidArgumentException('Cannot getByAttributes with an empty array');
 		}
 
 		return $this->fetchMany($this->newAttributesQuery($attributes));
 	}
 
 	/**
-	 * Get a collection of rows by criteria.
+	 * Get a collection of rows by a criteria. This resets all previously pushed
+	 * criteria.
 	 *
 	 * @param  \anlutro\LaravelRepository\CriteriaInterface $criteria
 	 *
@@ -611,6 +614,8 @@ abstract class AbstractRepository
 	 * @param  array  $keys
 	 *
 	 * @return mixed
+	 *
+	 * @throws \InvalidArgumentException if $keys is empty
 	 */
 	public function getByKeys(array $keys)
 	{

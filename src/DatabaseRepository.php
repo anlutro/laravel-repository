@@ -46,12 +46,12 @@ abstract class DatabaseRepository extends AbstractRepository
 	 */
 	public function __construct(Connection $db, ValidatorInterface $validator = null)
 	{
-		parent::__construct($validator);
-
 		if ($this->table === null) {
 			$class = get_class($this);
 			throw new \RuntimeException("Property {$class}::\$table must be defined.");
 		}
+
+		parent::__construct($validator);
 
 		$this->setConnection($db);
 
@@ -64,6 +64,8 @@ abstract class DatabaseRepository extends AbstractRepository
 	 * Set the connection to run queries on.
 	 *
 	 * @param \Illuminate\Database\Connection $db
+	 *
+	 * @return $this
 	 */
 	public function setConnection(Connection $db)
 	{
