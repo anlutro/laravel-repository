@@ -585,7 +585,7 @@ abstract class AbstractRepository
 	 */
 	public function getByAttributes(array $attributes)
 	{
-		if (count($attributes) > 1) {
+		if (empty($attributes)) {
 			throw new \InvalidArgumentException('Cannot getByAttributes with an empty array');
 		}
 
