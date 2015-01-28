@@ -59,7 +59,7 @@ class SearchCriteria implements CriteriaInterface
 	{
 		$method = $this->logic === static::LOGIC_AND ? 'where' : 'orWhere';
 
-		$query->where(function($query) {
+		$query->where(function($query) use($method) {
 			$value = '%'.str_replace(' ', '%', $this->search).'%';
 			foreach ($this->columns as $column) {
 				$query->$method($column, 'like', $value);
