@@ -89,7 +89,7 @@ class MultipleCriteria implements CriteriaInterface
     {
         $query->whereNested(function ($inner) use ($criteria)
         {
-            $inner->push($criteria);
+            $criteria->push($inner);
         }, 'and');
     }
 
@@ -101,7 +101,7 @@ class MultipleCriteria implements CriteriaInterface
     {
         $query->whereNested(function ($inner) use ($criteria)
         {
-            $inner->push($criteria);
+            $criteria->push($inner);
         }, 'or');
     }
 
