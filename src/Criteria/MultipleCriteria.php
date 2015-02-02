@@ -13,10 +13,11 @@ use anlutro\LaravelRepository\CriteriaInterface;
 
 /**
  * Class that stores more criteria with logic conditions.
+ *
+ * @author  BradleyWeston <b.weston@outlook.com>
  */
 class MultipleCriteria implements CriteriaInterface
 {
-
 	/**
 	 * @var int
 	 */
@@ -75,5 +76,4 @@ class MultipleCriteria implements CriteriaInterface
 			$criteria[0]->apply($inner);
 		}, $logic);
 	}
-
 }
