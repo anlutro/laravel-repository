@@ -30,7 +30,7 @@ class MultipleCriteria implements CriteriaInterface
     /**
      * @var array
      */
-    protected $criteria;
+    protected $criteria = [];
 
     /**
      * @param  \anlutro\LaravelRepository\CriteriaInterface $criteria
