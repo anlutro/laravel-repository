@@ -6,6 +6,11 @@ use Mockery as m;
 
 class ValidatedRepositoryTest extends PHPUnit_Framework_TestCase
 {
+	public function tearDown()
+	{
+		m::close();
+	}
+
 	protected function getRepo($class = null)
 	{
 		if (!$class) $class = 'ValidatedRepositoryStub';
@@ -21,7 +26,7 @@ class ValidatedRepositoryTest extends PHPUnit_Framework_TestCase
 	public function errorsAreAddedAndCanBeRetrieved()
 	{
 		$repo = $this->getRepo();
-		$repo->getModel()->shouldReceive('newInstance->fill->save')->once()->andReturn(true);
+		$repo->getModel()->shouldReceive('newInstance')->once();
 		$repo->getValidator()->shouldReceive('valid')->once()->with('create', ['foo' => 'bar'])->andReturn(false);
 		$repo->getValidator()->shouldReceive('getErrors')->once()->andReturn(new \Illuminate\Support\MessageBag(['error' => ['message']]));
 		$repo->create(['foo' => 'bar']);
