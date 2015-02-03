@@ -86,10 +86,12 @@ class SimpleCriteria implements CriteriaInterface
 	 */
 	public function apply($query)
 	{
-		foreach (['where', 'orWhere', 'whereIn', 'orWhereIn'] as $method) {
-			foreach ($this->{$method.'s'} as $params) {
-				call_user_func_array([$query, $method], $params);
+		$query->where(function($query) {
+			foreach (['where', 'orWhere', 'whereIn', 'orWhereIn'] as $method) {
+				foreach ($this->{$method.'s'} as $params) {
+					call_user_func_array([$query, $method], $params);
+				}
 			}
-		}
+		});
 	}
 }

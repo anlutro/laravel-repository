@@ -36,6 +36,8 @@ class CallbackCriteria implements CriteriaInterface
 	 */
 	public function apply($query)
 	{
-		call_user_func($this->callback, $query);
+		$query->where(function($query) {
+			call_user_func($this->callback, $query);
+		});
 	}
 }

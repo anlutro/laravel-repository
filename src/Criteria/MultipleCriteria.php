@@ -14,40 +14,47 @@ use anlutro\LaravelRepository\CriteriaInterface;
 /**
  * Class that stores more criteria with logic conditions.
  *
- * @author  BradleyWeston <b.weston@outlook.com>
+ * @author  Bradley Weston <b.weston@outlook.com>
  */
 class MultipleCriteria implements CriteriaInterface
 {
-	/**
-	 * @var int
-	 */
 	const LOGIC_AND = 1;
-
-	/**
-	 * @var int
-	 */
 	const LOGIC_OR = 2;
 
 	/**
-	 * @var array
+	 * @var int
+	 */
+	protected $logic;
+
+	/**
+	 * @var CriteriaInterface[]
 	 */
 	protected $criteria = [];
 
 	/**
-	 * @param  \anlutro\LaravelRepository\CriteriaInterface $criteria
-	 * @param  int $condition
-	 * 
-	 * @return static
+	 * Constructor.
 	 *
-	 * @throws \InvalidArgumentException when $condition is unknown.
+	 * @param  int $logic
 	 */
-	public function push(CriteriaInterface $criteria, $condition = self::LOGIC_AND)
+	public function __construct($logic = self::LOGIC_AND)
 	{
-		if (($condition != static::LOGIC_AND) || ($condition != static::LOGIC_OR)) {
-			throw new \InvalidArgumentException('Unknown condition.');
+		if ($logic !== static::LOGIC_AND && $logic !== static::LOGIC_OR) {
+			throw new \InvalidArgumentException('Unknown logic argument: '.$logic);
 		}
 
-		$this->criteria[] = [$criteria, $condition];
+		$this->logic = $logic;
+	}
+
+	/**
+	 * Add a criteria.
+	 *
+	 * @param  CriteriaInterface $criteria
+	 *
+	 * @return $this
+	 */
+	public function push(CriteriaInterface $criteria)
+	{
+		$this->criteria[] = $criteria;
 
 		return $this;
 	}
@@ -59,21 +66,14 @@ class MultipleCriteria implements CriteriaInterface
 	 */
 	public function apply($query)
 	{
-		foreach ($this->criteria as $criteria) {
-			$this->applyCriteria($query, $criteria);
-		}
-	}
+		$query->where(function($query) {
+			$logic = ($this->logic === static::LOGIC_AND) ? 'and' : 'or';
 
-	/**
-	 * @param \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder $query
-	 * @param array $criteria
-	 */
-	protected function applyCriteria($query, $criteria)
-	{
-		$logic = (static::LOGIC_AND === $criteria[1]) ? 'and' : 'or';
-
-		$query->whereNested(function ($inner) use ($criteria) {
-			$criteria[0]->apply($inner);
-		}, $logic);
+			foreach ($this->criteria as $criteria) {
+				$query->whereNested(function ($query) use ($criteria) {
+					$criteria->apply($query);
+				}, $logic);
+			}
+		});
 	}
 }
