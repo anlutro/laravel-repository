@@ -7,11 +7,12 @@ php:
   - hhvm
 
 env:
-  - LVERSION="4.1.*"
-  - LVERSION="4.2.*"
+  - LV="4.1.*"
+  - LV="4.2.*"
+  - LV="5.0.*"
 
 before_install:
-  - composer require illuminate/database:${LVERSION} laravel/laravel:${LVERSION} --no-update
+  - composer require illuminate/database:${LV} laravel/laravel:${LV} --no-update
 
 install: composer install --dev --prefer-dist
 

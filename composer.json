@@ -1,6 +1,6 @@
 {
 	"name": "anlutro/l4-repository",
-	"description": "Repository classes for Laravel 4.",
+	"description": "Repository classes for Laravel.",
 	"license": "MIT",
 	"authors": [
 		{
@@ -11,7 +11,7 @@
 	"require": {
 		"php": ">=5.4.0",
 		"anlutro/l4-validation": "~0.5.5",
-		"illuminate/database": "~4.1"
+		"illuminate/database": ">=4.1 <6.0"
 	},
 	"require-dev": {
 		"mockery/mockery": "0.9.*",
