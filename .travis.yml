@@ -12,7 +12,7 @@ env:
   - LV="5.0.*"
 
 before_install:
-  - composer require illuminate/database:${LV} laravel/laravel:${LV} --no-update
+  - composer require illuminate/database:${LV} --no-update
 
 install:
   - composer install --dev --no-interaction
