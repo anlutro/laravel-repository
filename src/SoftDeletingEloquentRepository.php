@@ -65,7 +65,7 @@ class SoftDeletingEloquentRepository extends EloquentRepository
             return call_user_func([$this->model, 'withTrashed']);
         }
 
-        return $this->model->newQuery();
+        return parent::newQuery();
     }
 
 }
