@@ -10,6 +10,7 @@
 namespace anlutro\LaravelRepository;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SoftDeletingEloquentRepository extends EloquentRepository
 {
@@ -57,15 +58,18 @@ class SoftDeletingEloquentRepository extends EloquentRepository
      */
     protected function newQuery()
     {
+        $query = parent::newQuery();
+
         if ($this->onlyTrashed === true) {
-            return call_user_func([$this->model, 'onlyTrashed']);
+            $column = $query->getQualifiedDeletedAtColumn();
+            $query->newQueryWithoutScope(new SoftDeletingScope)->whereNotNull($column);
         }
 
         if ($this->withTrashed === true) {
-            return call_user_func([$this->model, 'withTrashed']);
+            $query->newQueryWithoutScope(new SoftDeletingScope);
         }
 
-        return parent::newQuery();
+        return $query;
     }
 
 }
