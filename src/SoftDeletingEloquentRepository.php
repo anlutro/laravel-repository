@@ -9,8 +9,6 @@
 
 namespace anlutro\LaravelRepository;
 
-use Illuminate\Database\Eloquent\Model;
-
 class SoftDeletingEloquentRepository extends EloquentRepository
 {
 
