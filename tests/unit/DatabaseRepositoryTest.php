@@ -20,9 +20,12 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 
 		$query = $this->mockQuery();
 		$db->shouldReceive('table')->with('table')->andReturn($query);
-		$query->shouldReceive('get')->andReturn('foo');
+		$query->shouldReceive('get')->andReturn([['foo' => 'bar']]);
+		$results = $repo->getAll();
 
-		$this->assertEquals('foo', $repo->getAll());
+		$this->assertInternalType('array', $results);
+		$this->assertEquals(1, count($results));
+		$this->assertEquals('bar', $results[0]->foo);
 	}
 
 	/** @test */
@@ -35,9 +38,9 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 		$db->shouldReceive('table')->with('table')->andReturn($query);
 		$query->shouldReceive('where')->with('table.id', '=', 1)->once()
 			->andReturn(m::self())->getMock()->shouldReceive('first')
-			->andReturn('foo');
+			->andReturn(['foo' => 'bar']);
 
-		$this->assertEquals('foo', $repo->findByKey(1));
+		$this->assertEquals('bar', $repo->findByKey(1)->foo);
 	}
 
 	/** @test */
@@ -49,7 +52,7 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 
 		$query = $this->mockQuery();
 		$db->shouldReceive('table')->with('table')->andReturn($query);
-		$query->shouldReceive('insert')->with($data)->andReturn(true);
+		$query->shouldReceive('insertGetId')->with($data)->andReturn(1);
 
 		$result = $repo->create($data);
 		$this->assertEquals('bar', $result->foo);
@@ -64,7 +67,7 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 
 		$query = $this->mockQuery();
 		$db->shouldReceive('table')->with('table')->andReturn($query);
-		$query->shouldReceive('insert')->with($data)->andReturn(false);
+		$query->shouldReceive('insertGetId')->with($data)->andReturn(false);
 
 		$this->assertFalse($repo->create($data));
 	}
@@ -144,7 +147,7 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 		$query = $this->mockQuery();
 		$db->shouldReceive('table')->with('table')->andReturn($query);
 		$query->shouldReceive('applyCriteria')->once();
-		$query->shouldReceive('get')->once();
+		$query->shouldReceive('get')->once()->andReturn([]);
 
 		$repo->getAll();
 	}
@@ -158,7 +161,7 @@ class DatabaseRepositoryTest extends PHPUnit_Framework_TestCase
 		$query = $this->mockQuery();
 		$db->shouldReceive('table')->with('table')->andReturn($query);
 		$query->shouldReceive('applyCriteria')->once();
-		$query->shouldReceive('get')->once();
+		$query->shouldReceive('get')->once()->andReturn([]);
 
 		$repo->getAll();
 	}

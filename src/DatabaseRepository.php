@@ -134,9 +134,14 @@ abstract class DatabaseRepository extends AbstractRepository
 		$this->fillEntityAttributes($entity, $attributes);
 
 		$result = $this->newQuery()
-			->insert($this->getEntityAttributes($entity));
+			->insertGetId($this->getEntityAttributes($entity));
 
-		return $result ? $entity : false;
+		if ($result) {
+			$this->setEntityKey($entity, $result);
+			return $entity;
+		}
+
+		return false;
 	}
 
 	/**
@@ -177,6 +182,11 @@ abstract class DatabaseRepository extends AbstractRepository
 		return $entity->{$this->primaryKey};
 	}
 
+	protected function setEntityKey($entity, $key)
+	{
+		$entity->{$this->primaryKey} = $key;
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -197,6 +207,35 @@ abstract class DatabaseRepository extends AbstractRepository
 	{
 		foreach ($attributes as $key => $value) {
 			$entity->$key = $value;
+		}
+	}
+
+	protected function getRegularQueryResults($query, $many)
+	{
+		$results = parent::getRegularQueryResults($query, $many);
+
+		if ($many) {
+			return array_map([$this, 'getNew'], $results);
+		} else {
+			return $results ? $this->getNew($results) : $results;
+		}
+	}
+
+	protected function getPaginatedQueryResults($query)
+	{
+		$paginator = parent::getPaginatedQueryResults();
+
+		$paginator->setItems(array_map([$this, 'getNew'], $paginator->setItems()));
+
+		return $paginator;
+	}
+
+	public function persist($entity)
+	{
+		if ($key = $this->getEntityKey($entity)) {
+			return $this->update($entity, []);
+		} else {
+			return (bool) $this->perform('create', $entity, [], true);
 		}
 	}
 }

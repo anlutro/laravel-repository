@@ -171,4 +171,9 @@ abstract class EloquentRepository extends AbstractRepository
 	{
 		return $model->getAttributes();
 	}
+
+	public function persist($entity)
+	{
+		return $this->perform('save', $model, $attributes, false);
+	}
 }

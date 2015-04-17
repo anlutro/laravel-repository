@@ -247,7 +247,7 @@ abstract class AbstractRepository
 	 * @param  mixed   $query
 	 * @param  boolean $many
 	 *
-	 * @return mixed
+	 * @return array|Fluent
 	 */
 	protected function getRegularQueryResults($query, $many)
 	{
@@ -699,6 +699,15 @@ abstract class AbstractRepository
 	 * @return object
 	 */
 	public abstract function getNew(array $attributes = array());
+
+	/**
+	 * Persist an entity.
+	 *
+	 * @param  mixed $entity
+	 *
+	 * @return boolean
+	 */
+	public abstract function persist($entity);
 
 	/**
 	 * Perform a create action.

@@ -24,7 +24,8 @@ class EloquentRepositoryIntegrationTest extends EloquentTestCase
 	 */
 	public function getAll()
 	{
-		$repo = $this->makeRepo(); $model = $repo->create(['name' => 'foo']);
+		$repo = $this->makeRepo();
+		$model = $repo->create(['name' => 'foo']);
 		$results = $repo->getAll();
 		$this->assertEquals(1, $results->count());
 		$this->assertEquals('foo', $results->first()->name);
