@@ -37,9 +37,9 @@ before_install:
   - composer require illuminate/database:${LV} --no-update
 
 install:
-  - composer install --dev --no-interaction
+  - composer install --no-interaction
 
 script:
-  - phpunit
+  - vendor/bin/phpunit
 
 sudo: false
