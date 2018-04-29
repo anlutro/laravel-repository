@@ -38,6 +38,7 @@ matrix:
       env: LV="5.6.*"
 
 before_install:
+  - phpenv config-rm xdebug.ini
   - composer require illuminate/database:${LV} --no-update
 
 install:
