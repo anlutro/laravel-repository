@@ -39,7 +39,7 @@ matrix:
 
 before_install:
   - phpenv config-rm xdebug.ini
-  - composer require illuminate/database:${LV} --no-update
+  - composer require illuminate/{container,database,filesystem,support,translation,validation}:${LV} --no-update
 
 install:
   - composer install --no-interaction
